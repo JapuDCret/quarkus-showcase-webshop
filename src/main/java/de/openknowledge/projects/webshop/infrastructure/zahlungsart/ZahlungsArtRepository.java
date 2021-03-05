@@ -13,7 +13,7 @@ public class ZahlungsArtRepository {
     private final List<ZahlungsArt> zahlungsArten = new ArrayList<>();
 
     @PostConstruct
-    private void init() {
+    public void init() {
         ZahlungsArt zahlungsArtPaypal = new ZahlungsArt("PayPal");
 
         zahlungsArten.add(zahlungsArtPaypal);

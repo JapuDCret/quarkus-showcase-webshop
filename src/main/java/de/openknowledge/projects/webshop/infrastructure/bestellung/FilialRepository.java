@@ -1,4 +1,4 @@
-package de.openknowledge.projects.webshop.infrastructure.bewertung;
+package de.openknowledge.projects.webshop.infrastructure.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.filiale.FilialAdresse;
 import de.openknowledge.projects.webshop.domain.bestellung.filiale.FilialName;
@@ -16,7 +16,7 @@ public class FilialRepository {
     private final List<Filiale> filialen = new ArrayList<>();
 
     @PostConstruct
-    private void init() {
+    public void init() {
         FilialAdresse filialAdresseA = FilialAdresse.Builder()
                 .setPostAnschriftName("Restaurant GmbH")
                 .setStrasse("Poststraße 1")

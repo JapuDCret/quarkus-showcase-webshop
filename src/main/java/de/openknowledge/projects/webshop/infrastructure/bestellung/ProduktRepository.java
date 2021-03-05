@@ -14,7 +14,7 @@ public class ProduktRepository {
     private final List<Produkt> produkte = new ArrayList<>();
 
     @PostConstruct
-    private void init() {
+    public void init() {
         Produkt produktSalat = new Produkt("Salat", BigDecimal.valueOf(8.5));
         produkte.add(produktSalat);
 
