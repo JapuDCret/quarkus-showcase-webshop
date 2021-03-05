@@ -49,7 +49,7 @@ public class ProduktListe implements Serializable {
         this.produkte = b.produkte;
     }
 
-    private static class Builder {
+    public static class Builder {
         private List<ProduktAuswahl> produkte;
 
         private Builder() {

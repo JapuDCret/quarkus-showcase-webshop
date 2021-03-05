@@ -86,7 +86,7 @@ public class Zahlung implements Serializable {
         this.abschluss = b.abschluss;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Bestellung bestellung;
         private ZahlungsArt zahlungsArt;
         private BigDecimal betrag;

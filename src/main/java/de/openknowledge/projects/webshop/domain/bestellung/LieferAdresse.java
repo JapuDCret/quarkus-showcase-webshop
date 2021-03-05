@@ -72,7 +72,7 @@ public class LieferAdresse implements Serializable {
         this.kommentar = b.kommentar;
     }
 
-    private static class Builder {
+    public static class Builder {
         private KundenName kundenName;
         private Strasse strasse;
         private Stadt stadt;

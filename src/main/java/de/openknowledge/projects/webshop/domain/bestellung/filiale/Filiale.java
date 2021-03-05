@@ -50,24 +50,24 @@ public class Filiale implements Serializable {
         return new Builder();
     }
 
-    public Filiale(Builder b) {
+    private Filiale(Builder b) {
         this.name = b.name;
         this.adresse = b.adresse;
     }
 
-    private static class Builder {
+    public static class Builder {
         private FilialName name;
         private FilialAdresse adresse;
 
         private Builder() { }
 
-        private Builder setName(@NotNull FilialName name) {
+        public Builder setName(@NotNull FilialName name) {
             this.name = name;
 
             return this;
         }
 
-        private Builder setFilialAdresse(@NotNull FilialAdresse adresse) {
+        public Builder setFilialAdresse(@NotNull FilialAdresse adresse) {
             this.adresse = adresse;
 
             return this;

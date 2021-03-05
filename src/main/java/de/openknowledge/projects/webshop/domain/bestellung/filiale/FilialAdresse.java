@@ -66,7 +66,7 @@ public class FilialAdresse implements Serializable {
         this.stadt = b.stadt;
     }
 
-    private static class Builder {
+    public static class Builder {
         private FilialPostAnschriftName postAnschriftName;
         private Strasse strasse;
         private Stadt stadt;

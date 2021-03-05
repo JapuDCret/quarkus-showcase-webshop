@@ -72,7 +72,7 @@ public class RechnungsAdresse implements Serializable {
         this.stadt = b.stadt;
     }
 
-    private static class Builder {
+    public static class Builder {
         private KundenName kundenName;
         private FirmenZusatz firmenZusatz;
         private Strasse strasse;

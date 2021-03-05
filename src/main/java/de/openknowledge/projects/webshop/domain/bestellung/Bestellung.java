@@ -57,7 +57,7 @@ public class Bestellung implements Serializable {
         this.rechnungsAdresse = b.rechnungsAdresse;
     }
 
-    private static class Builder {
+    public static class Builder {
         private ProduktListe produktListe;
         private LieferAdresse lieferAdresse;
         private RechnungsAdresse rechnungsAdresse;

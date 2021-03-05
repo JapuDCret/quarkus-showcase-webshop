@@ -79,7 +79,7 @@ public class Lieferung implements Serializable {
         this.lieferZeitpunkt = b.lieferZeitpunkt;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Bestellung bestellung;
         private LieferZeitpunkt lieferZeitpunkt;
         private LieferStart lieferStart;
@@ -87,25 +87,25 @@ public class Lieferung implements Serializable {
 
         private Builder() { }
 
-        private Builder setBestellung(@NotNull Bestellung bestellung) {
+        public Builder setBestellung(@NotNull Bestellung bestellung) {
             this.bestellung = bestellung;
 
             return this;
         }
 
-        private Builder setLieferZeitpunkt(@NotNull LieferZeitpunkt lieferZeitpunkt) {
+        public Builder setLieferZeitpunkt(@NotNull LieferZeitpunkt lieferZeitpunkt) {
             this.lieferZeitpunkt = lieferZeitpunkt;
 
             return this;
         }
 
-        private Builder setLieferStart(@NotNull LieferStart lieferStart) {
+        public Builder setLieferStart(@NotNull LieferStart lieferStart) {
             this.lieferStart = lieferStart;
 
             return this;
         }
 
-        private Builder setLieferEnde(@NotNull LieferEnde lieferEnde) {
+        public Builder setLieferEnde(@NotNull LieferEnde lieferEnde) {
             this.lieferEnde = lieferEnde;
 
             return this;

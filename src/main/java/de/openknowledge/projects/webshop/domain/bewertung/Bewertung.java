@@ -60,7 +60,7 @@ public class Bewertung implements Serializable {
         this.kommentar = b.kommentar;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Filiale filiale;
         private BewertungsDatum datum;
         private Wertung wertung;
