@@ -18,7 +18,10 @@ public class LieferAdresse implements Serializable {
     private final Strasse strasse;
 
     @NotNull
-    private final Stadt stadt;
+    private final Postleitzahl plz;
+
+    @NotNull
+    private final StadtName stadtName;
 
     private final LieferKommentar kommentar;
 
@@ -30,8 +33,12 @@ public class LieferAdresse implements Serializable {
         return strasse;
     }
 
-    public Stadt getStadt() {
-        return stadt;
+    public Postleitzahl getPlz() {
+        return plz;
+    }
+
+    public StadtName getStadtName() {
+        return stadtName;
     }
 
     public LieferKommentar getKommentar() {
@@ -43,12 +50,12 @@ public class LieferAdresse implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LieferAdresse that = (LieferAdresse) o;
-        return Objects.equals(kundenName, that.kundenName) && Objects.equals(strasse, that.strasse) && Objects.equals(stadt, that.stadt) && Objects.equals(kommentar, that.kommentar);
+        return Objects.equals(kundenName, that.kundenName) && Objects.equals(strasse, that.strasse) && Objects.equals(plz, that.plz) && Objects.equals(stadtName, that.stadtName) && Objects.equals(kommentar, that.kommentar);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(kundenName, strasse, stadt, kommentar);
+        return Objects.hash(kundenName, strasse, plz, stadtName, kommentar);
     }
 
     @Override
@@ -56,7 +63,8 @@ public class LieferAdresse implements Serializable {
         return "Lieferadresse{" +
                 "kundenName=" + kundenName +
                 ", strasse=" + strasse +
-                ", stadt=" + stadt +
+                ", plz=" + plz +
+                ", stadtName=" + stadtName +
                 ", kommentar=" + kommentar +
                 '}';
     }
@@ -68,14 +76,16 @@ public class LieferAdresse implements Serializable {
     public LieferAdresse(Builder b) {
         this.kundenName = b.kundenName;
         this.strasse = b.strasse;
-        this.stadt = b.stadt;
+        this.plz = b.plz;
+        this.stadtName = b.stadtName;
         this.kommentar = b.kommentar;
     }
 
     public static class Builder {
         private KundenName kundenName;
         private Strasse strasse;
-        private Stadt stadt;
+        private Postleitzahl plz;
+        private StadtName stadtName;
         private LieferKommentar kommentar;
 
         private Builder() { }
@@ -92,8 +102,14 @@ public class LieferAdresse implements Serializable {
             return this;
         }
 
-        public Builder setStadt(int plz, @NotNull String stadtName) {
-            this.stadt = new Stadt(plz, stadtName);
+        public Builder setPlz(@NotNull String plz) {
+            this.plz = new Postleitzahl(plz);
+
+            return this;
+        }
+
+        public Builder setStadtName( @NotNull String stadtName) {
+            this.stadtName = new StadtName(stadtName);
 
             return this;
         }
@@ -117,8 +133,11 @@ public class LieferAdresse implements Serializable {
             if(this.strasse == null) {
                 throw new ValidationException("Lieferadresse.Builder: Straße darf nicht 'null' sein!");
             }
-            if(this.stadt == null) {
-                throw new ValidationException("Lieferadresse.Builder: Stadt darf nicht 'null' sein!");
+            if(this.plz == null) {
+                throw new ValidationException("Lieferadresse.Builder: PLZ darf nicht 'null' sein!");
+            }
+            if(this.stadtName == null) {
+                throw new ValidationException("Lieferadresse.Builder: StadtName darf nicht 'null' sein!");
             }
             // this.kommentar darf null sein
 

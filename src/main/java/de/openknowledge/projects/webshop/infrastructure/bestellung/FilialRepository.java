@@ -20,7 +20,8 @@ public class FilialRepository {
         FilialAdresse filialAdresseA = FilialAdresse.Builder()
                 .setPostAnschriftName("Restaurant GmbH")
                 .setStrasse("Poststraße 1")
-                .setStadt(26122, "Oldenburg")
+                .setPlz("26122")
+                .setStadtName("Oldenburg")
                 .build();
         FilialName filialNameA = new FilialName("Filiale A");
         Filiale filialeA = Filiale.Builder()
@@ -33,7 +34,8 @@ public class FilialRepository {
         FilialAdresse filialAdresseB = FilialAdresse.Builder()
                 .setPostAnschriftName("Restaurant GmbH")
                 .setStrasse("II. Hagen 7")
-                .setStadt(45127, "Essen")
+                .setPlz("45127")
+                .setStadtName("Essen")
                 .build();
         FilialName filialNameB = new FilialName("Filiale B");
         Filiale filialeB = Filiale.Builder()

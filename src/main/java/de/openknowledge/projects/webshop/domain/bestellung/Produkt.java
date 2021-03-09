@@ -1,5 +1,9 @@
 package de.openknowledge.projects.webshop.domain.bestellung;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,14 +12,21 @@ import java.util.Objects;
 /**
  * ValueObject "Produkt"
  */
-public class Produkt implements Comparable<Produkt>, Serializable {
+@Entity
+@Table(name = "PRODUKT")
+public class Produkt extends PanacheEntity implements Comparable<Produkt>, Serializable {
     private static final long serialVersionUID = -3267302111849257811L;
 
-    private final String name;
+    private String name;
 
-    private final BigDecimal preis;
+    private BigDecimal preis;
+
+    public Produkt() {
+        super();
+    }
 
     public Produkt(@NotNull String name, @NotNull BigDecimal preis) {
+        super();
         this.name = name;
         this.preis = preis;
     }

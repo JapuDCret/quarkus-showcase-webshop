@@ -20,22 +20,29 @@ public class RechnungsAdresse implements Serializable {
     private final Strasse strasse;
 
     @NotNull
-    private final Stadt stadt;
+    private final Postleitzahl plz;
+
+    @NotNull
+    private final StadtName stadtName;
 
     public KundenName getKundenName() {
         return kundenName;
+    }
+
+    public FirmenZusatz getFirmenZusatz() {
+        return firmenZusatz;
     }
 
     public Strasse getStrasse() {
         return strasse;
     }
 
-    public Stadt getStadt() {
-        return stadt;
+    public Postleitzahl getPlz() {
+        return plz;
     }
 
-    public FirmenZusatz getFirmenZusatz() {
-        return firmenZusatz;
+    public StadtName getStadtName() {
+        return stadtName;
     }
 
     @Override
@@ -43,21 +50,22 @@ public class RechnungsAdresse implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RechnungsAdresse that = (RechnungsAdresse) o;
-        return Objects.equals(kundenName, that.kundenName) && Objects.equals(firmenZusatz, that.firmenZusatz) && Objects.equals(strasse, that.strasse) && Objects.equals(stadt, that.stadt);
+        return Objects.equals(kundenName, that.kundenName) && Objects.equals(firmenZusatz, that.firmenZusatz) && Objects.equals(strasse, that.strasse) && Objects.equals(plz, that.plz) && Objects.equals(stadtName, that.stadtName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(kundenName, firmenZusatz, strasse, stadt);
+        return Objects.hash(kundenName, firmenZusatz, strasse, plz, stadtName);
     }
 
     @Override
     public String toString() {
-        return "Rechnungsadresse{" +
+        return "RechnungsAdresse{" +
                 "kundenName=" + kundenName +
                 ", firmenZusatz=" + firmenZusatz +
                 ", strasse=" + strasse +
-                ", stadt=" + stadt +
+                ", plz=" + plz +
+                ", stadtName=" + stadtName +
                 '}';
     }
 
@@ -69,14 +77,16 @@ public class RechnungsAdresse implements Serializable {
         this.kundenName = b.kundenName;
         this.firmenZusatz = b.firmenZusatz;
         this.strasse = b.strasse;
-        this.stadt = b.stadt;
+        this.plz = b.plz;
+        this.stadtName = b.stadtName;
     }
 
     public static class Builder {
         private KundenName kundenName;
         private FirmenZusatz firmenZusatz;
         private Strasse strasse;
-        private Stadt stadt;
+        private Postleitzahl plz;
+        private StadtName stadtName;
 
         private Builder() { }
 
@@ -98,8 +108,14 @@ public class RechnungsAdresse implements Serializable {
             return this;
         }
 
-        public Builder setStadt(int plz, @NotNull String stadtName) {
-            this.stadt = new Stadt(plz, stadtName);
+        public Builder setPlz(@NotNull String plz) {
+            this.plz = new Postleitzahl(plz);
+
+            return this;
+        }
+
+        public Builder setStadtName(@NotNull String stadtName) {
+            this.stadtName = new StadtName(stadtName);
 
             return this;
         }
@@ -114,12 +130,15 @@ public class RechnungsAdresse implements Serializable {
             if(this.kundenName == null) {
                 throw new ValidationException("Rechnungsadresse.Builder: KundenName darf nicht 'null' sein!");
             }
-            // this.lieferadresse.firmenZusatz darf null sein
+            // this.firmenZusatz darf null sein
             if(this.strasse == null) {
                 throw new ValidationException("Rechnungsadresse.Builder: Straße darf nicht 'null' sein!");
             }
-            if(this.stadt == null) {
-                throw new ValidationException("Rechnungsadresse.Builder: Stadt darf nicht 'null' sein!");
+            if(this.plz == null) {
+                throw new ValidationException("Rechnungsadresse.Builder: PLZ darf nicht 'null' sein!");
+            }
+            if(this.stadtName == null) {
+                throw new ValidationException("Rechnungsadresse.Builder: StadtName darf nicht 'null' sein!");
             }
 
             return new RechnungsAdresse(this);

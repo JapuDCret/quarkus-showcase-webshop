@@ -51,7 +51,19 @@ public class FilialResource {
     LOG.info("{}", filialen);
 
     return Response.status(Response.Status.OK)
-        .entity(filialen)
-        .build();
+            .entity(filialen)
+            .build();
+  }
+
+  @GET
+  @Path("filiale")
+  public Response getNearest() {
+    List<Filiale> filialen = repository.read();
+
+    LOG.info("{}", filialen);
+
+    return Response.status(Response.Status.OK)
+            .entity(filialen)
+            .build();
   }
 }

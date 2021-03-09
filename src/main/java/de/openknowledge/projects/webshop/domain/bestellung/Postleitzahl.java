@@ -1,34 +1,34 @@
 package de.openknowledge.projects.webshop.domain.bestellung;
 
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Stadt implements Serializable  {
-    private static final long serialVersionUID = -8592943921371696984L;
+/**
+ * ValueObject "Postleitzahl"
+ */
+public class Postleitzahl implements Serializable  {
+    private static final long serialVersionUID = -5034920939044989117L;
 
-    public final int plz;
-    
-    public final String stadtName;
+    public final String plz;
 
-    public Stadt(int plz, @NotNull String stadtName) {
+    public Postleitzahl(@NotNull String plz) {
+        if(plz.length() != 5) {
+            throw new ValidationException("invalid PLZ! plz = " + plz);
+        }
         this.plz = plz;
-        this.stadtName = stadtName;
     }
 
-    public int getPlz() {
+    public String getPlz() {
         return plz;
-    }
-
-    public String getStadtName() {
-        return stadtName;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Stadt that = (Stadt) o;
+        Postleitzahl that = (Postleitzahl) o;
         return plz == that.plz;
     }
 
@@ -39,9 +39,8 @@ public class Stadt implements Serializable  {
 
     @Override
     public String toString() {
-        return "Postleitzahl{" +
+        return "PLZ{" +
                 "plz=" + plz +
-                ", stadtName='" + stadtName + '\'' +
                 '}';
     }
 }
