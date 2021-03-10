@@ -17,6 +17,7 @@ package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.filiale.Filiale;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.FilialRepository;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,19 +46,8 @@ public class FilialResource {
   public FilialRepository repository;
 
   @GET
+  @APIResponse(responseCode = "200", description = "Filialliste")
   public Response getFilialen() {
-    List<Filiale> filialen = repository.read();
-
-    LOG.info("{}", filialen);
-
-    return Response.status(Response.Status.OK)
-            .entity(filialen)
-            .build();
-  }
-
-  @GET
-  @Path("filiale")
-  public Response getNearest() {
     List<Filiale> filialen = repository.read();
 
     LOG.info("{}", filialen);

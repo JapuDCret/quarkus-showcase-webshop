@@ -17,6 +17,7 @@ package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,7 @@ public class ProduktResource {
   public ProduktRepository repository;
 
   @GET
+  @APIResponse(responseCode = "200", description = "Produktliste")
   public Response getProdukte() {
     List<Produkt> produkte = repository.read();
 

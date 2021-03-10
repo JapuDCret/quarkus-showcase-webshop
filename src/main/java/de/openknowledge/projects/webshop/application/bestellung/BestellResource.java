@@ -3,7 +3,6 @@ package de.openknowledge.projects.webshop.application.bestellung;
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -18,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
+import java.util.Set;
 
 /**
  * A resource that provides access to the {@link Bestellung}en.
@@ -32,14 +31,14 @@ public class BestellResource {
     private static final Logger LOG = LoggerFactory.getLogger(BestellResource.class);
 
     @Inject
-    private BestellService service;
+    private BestellApplicationService service;
 
     @Inject
     private BestellRepository repository;
 
     @GET
     public Response getBestellungen() {
-        List<Bestellung> bestellungen = repository.read();
+        Set<Bestellung> bestellungen = repository.read();
 
         LOG.info("{}", bestellungen);
 
@@ -50,14 +49,15 @@ public class BestellResource {
 
     @PUT
     @Operation(operationId = "placeBestellung", description = "Bestellung wird abgeschickt")
-    @APIResponse(responseCode = "201", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsinfoDTO.class)))
+    @APIResponse(responseCode = "201", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsAufforderungDTO.class)))
     @APIResponse(responseCode = "400", description = "Bestellung abgelehnt")
     public Response placeBestellung(
             @RequestBody(name = "bestellung", required = true, content = @Content(schema = @Schema(implementation = BestellungDTO.class)))
-            @NotNull @Valid final BestellungDTO dto) {
+            @NotNull @Valid final BestellungDTO dto
+    ) {
         LOG.info("Placing Bestellung {}", dto);
 
-        ZahlungsinfoDTO zahlungsinfo = service.placeBestellung(dto);
+        ZahlungsAufforderungDTO zahlungsinfo = service.placeBestellung(dto);
 
         LOG.info("Bestellung created");
 

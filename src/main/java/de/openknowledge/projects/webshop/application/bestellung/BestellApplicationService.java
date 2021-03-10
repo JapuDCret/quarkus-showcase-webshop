@@ -1,6 +1,7 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.*;
+import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,9 @@ import java.util.Optional;
  * A service that handles mapping from {@BestellungDTO} to {@link Bestellung}.
  */
 @ApplicationScoped
-public class BestellService {
+public class BestellApplicationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BestellService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BestellApplicationService.class);
 
     @Inject
     private ProduktRepository produktRepository;
@@ -25,18 +26,24 @@ public class BestellService {
     @Inject
     private BestellDomainService bestellService;
 
-    public @NotNull ZahlungsinfoDTO placeBestellung(@NotNull final BestellungDTO dto) {
+    public @NotNull ZahlungsAufforderungDTO placeBestellung(@NotNull final BestellungDTO dto) {
         Bestellung bestellung = this.convertBestellung(dto);
 
-        bestellService.create(bestellung);
+        LOG.info("Persistiere {}", bestellung);
 
-        ZahlungsinfoDTO zahlungsinfoDTO = new ZahlungsinfoDTO(
+        Zahlung zahlung = bestellService.create(bestellung);
+
+        LOG.info("Bestellung persistiert, {} erzeugt", zahlung);
+
+        ZahlungsAufforderungDTO zahlungsAufforderung = new ZahlungsAufforderungDTO(
                 bestellung.getBestellId().getId(),
-                "", // TODO
+                zahlung.getZahlungsId().getId(),
                 bestellung.getProduktListe().getBetrag().doubleValue()
         );
 
-        return zahlungsinfoDTO;
+        LOG.info("Gege {} zurück", zahlungsAufforderung);
+
+        return zahlungsAufforderung;
     }
 
     private @NotNull Bestellung convertBestellung(@NotNull final BestellungDTO dto) {

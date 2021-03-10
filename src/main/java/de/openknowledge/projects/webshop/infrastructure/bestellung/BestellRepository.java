@@ -6,28 +6,23 @@ import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ApplicationScoped
 public class BestellRepository {
-    private final List<Bestellung> bestellungen = new ArrayList<>();
+    private final Set<Bestellung> bestellungen = new HashSet<>();
 
     @PostConstruct
     public void init() { }
 
-    public List<Bestellung> read() {
-        return Collections.unmodifiableList(this.bestellungen);
+    public Set<Bestellung> read() {
+        return Collections.unmodifiableSet(this.bestellungen);
     }
 
     public Optional<Bestellung> findById(@NotNull BestellId bestellId) {
         return this.bestellungen
                 .stream()
-                .filter((bestellung) -> {
-                    return bestellung.getBestellId().equals(bestellId);
-                })
+                .filter((bestellung) -> bestellung.getBestellId().equals(bestellId))
                 .findAny();
     }
 
