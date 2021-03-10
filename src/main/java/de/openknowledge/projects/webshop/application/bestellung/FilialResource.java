@@ -30,6 +30,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A resource that provides access to the {@link Filiale}en.
@@ -50,10 +51,14 @@ public class FilialResource {
   public Response getFilialen() {
     List<Filiale> filialen = repository.read();
 
-    LOG.info("{}", filialen);
+    List<FilialDTO> filialDTOs = filialen.stream()
+            .map((filiale) -> FilialDTO.of(filiale))
+            .collect(Collectors.toList());
+
+    LOG.info("filialDTOs = {}", filialDTOs);
 
     return Response.status(Response.Status.OK)
-            .entity(filialen)
+            .entity(filialDTOs)
             .build();
   }
 }

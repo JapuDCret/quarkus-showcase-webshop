@@ -1,0 +1,10 @@
+greeting:
+  - ID: 1
+    NAME: Salat
+    PREIS: 8.5
+  - ID: 2
+    NAME: Bowl
+    PREIS: 11.0
+  - ID: 3
+    NAME: Ciabatta
+    PREIS: 1.5

@@ -30,6 +30,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A resource that provides access to the {@link Produkt}e.
@@ -50,10 +51,14 @@ public class ProduktResource {
   public Response getProdukte() {
     List<Produkt> produkte = repository.read();
 
-    LOG.info("{}", produkte);
+    List<ProduktDTO> produktDTOs = produkte.stream()
+            .map((produkt) -> ProduktDTO.of(produkt))
+            .collect(Collectors.toList());
+
+    LOG.info("produktDTOs = {}", produktDTOs);
 
     return Response.status(Response.Status.OK)
-        .entity(produkte)
-        .build();
+            .entity(produktDTOs)
+            .build();
   }
 }
