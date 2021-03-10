@@ -3,13 +3,15 @@ package de.openknowledge.projects.webshop.domain.bestellung;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Aggregate "ProduktListe"
+ * ValueObject "ProduktListe"
  */
 public class ProduktListe implements Serializable {
     private static final long serialVersionUID = 976238722135651570L;
@@ -17,8 +19,18 @@ public class ProduktListe implements Serializable {
     @NotNull
     private final List<ProduktAuswahl> produkte;
 
+    /**
+     * Is calculated once during creation
+     */
+    @NotNull
+    private final BigDecimal betrag;
+
     public List<ProduktAuswahl> getProdukte() {
         return Collections.unmodifiableList(produkte);
+    }
+
+    public BigDecimal getBetrag() {
+        return this.betrag;
     }
 
     @Override
@@ -47,6 +59,19 @@ public class ProduktListe implements Serializable {
 
     private ProduktListe(Builder b) {
         this.produkte = b.produkte;
+
+        BigDecimal betrag = this.produkte.stream()
+                // calculate the total price for each item with the respective item count
+                .map((produkt) -> {
+                    int anzahl = produkt.getAnzahl();
+                    BigDecimal preis = produkt.getProdukt().getPreis();
+
+                    return preis.multiply(new BigDecimal(anzahl));
+                })
+                // add all total prices
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.betrag = betrag;
     }
 
     public static class Builder {

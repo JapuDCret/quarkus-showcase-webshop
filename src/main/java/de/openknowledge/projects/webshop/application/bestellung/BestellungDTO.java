@@ -1,5 +1,7 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -9,9 +11,11 @@ public class BestellungDTO implements Serializable {
     private static final long serialVersionUID = 702881262028313455L;
 
     @NotNull
+    @Schema(required = true)
     private List<ProduktAuswahlDTO> produktListe;
 
     @NotNull
+    @Schema(required = true)
     private LieferAdresseDTO lieferAdresse;
 
     protected BestellungDTO() {

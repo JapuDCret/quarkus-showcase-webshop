@@ -3,14 +3,18 @@ package de.openknowledge.projects.webshop.application.bestellung;
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,15 +50,19 @@ public class BestellResource {
 
     @PUT
     @Operation(operationId = "placeBestellung", description = "Bestellung wird abgeschickt")
-    @APIResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(implementation = BestellungDTO.class)))
-    public Response placeBestellung(final BestellungDTO dto) {
+    @APIResponse(responseCode = "201", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsinfoDTO.class)))
+    @APIResponse(responseCode = "400", description = "Bestellung abgelehnt")
+    public Response placeBestellung(
+            @RequestBody(name = "bestellung", required = true, content = @Content(schema = @Schema(implementation = BestellungDTO.class)))
+            @NotNull @Valid final BestellungDTO dto) {
         LOG.info("Placing Bestellung {}", dto);
 
-        service.placeBestellung(dto);
+        ZahlungsinfoDTO zahlungsinfo = service.placeBestellung(dto);
 
         LOG.info("Bestellung created");
 
         return Response.status(Response.Status.CREATED)
+                .entity(zahlungsinfo)
                 .build();
     }
 }

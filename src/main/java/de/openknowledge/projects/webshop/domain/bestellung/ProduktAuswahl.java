@@ -19,6 +19,14 @@ public class ProduktAuswahl implements Comparable<ProduktAuswahl>, Serializable 
         this.anzahl = anzahl;
     }
 
+    public Produkt getProdukt() {
+        return produkt;
+    }
+
+    public int getAnzahl() {
+        return anzahl;
+    }
+
     @Override
     public int compareTo(ProduktAuswahl o) {
         int produktComparison = this.produkt.compareTo(o.produkt);

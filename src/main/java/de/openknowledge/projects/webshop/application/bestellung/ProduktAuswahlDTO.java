@@ -1,5 +1,7 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,9 +10,11 @@ public class ProduktAuswahlDTO implements Serializable {
     private static final long serialVersionUID = -7888587115495187952L;
 
     @NotNull
+    @Schema(required = true, example = "Salat")
     private String name;
 
     @NotNull
+    @Schema(required = true, example = "1")
     private int anzahl;
 
     protected ProduktAuswahlDTO() {

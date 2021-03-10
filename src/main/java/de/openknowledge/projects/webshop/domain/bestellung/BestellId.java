@@ -1,23 +1,22 @@
 package de.openknowledge.projects.webshop.domain.bestellung;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Objects;
 
 /**
  * ValueObject "BestellId"
  */
 public class BestellId implements Comparable<BestellId>, Serializable {
-    private static final long serialVersionUID = 2473222120737283076L;
+    private static final long serialVersionUID = -8704431729381243934L;
 
-    private final BigInteger identifier;
+    private final String id;
 
-    public BestellId(BigInteger identifier) {
-        this.identifier = identifier;
+    public BestellId(String id) {
+        this.id = id;
     }
 
-    public BigInteger getIdentifier() {
-        return identifier;
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -25,16 +24,23 @@ public class BestellId implements Comparable<BestellId>, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BestellId bestellId = (BestellId) o;
-        return Objects.equals(identifier, bestellId.identifier);
+        return Objects.equals(id, bestellId.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identifier);
+        return Objects.hash(id);
     }
 
     @Override
-    public int compareTo(BestellId other) {
-        return this.identifier.compareTo(other.identifier);
+    public int compareTo(BestellId that) {
+        return this.id.compareTo(that.id);
+    }
+
+    @Override
+    public String toString() {
+        return "BestellId{" +
+                "id='" + id + '\'' +
+                '}';
     }
 }

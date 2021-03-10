@@ -1,5 +1,7 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,18 +10,23 @@ public class LieferAdresseDTO implements Serializable {
     private static final long serialVersionUID = 7479007705954840655L;
 
     @NotNull
+    @Schema(required = true, example = "Max")
     private String vorName;
 
     @NotNull
+    @Schema(required = true, example = "Mustermann")
     private String nachName;
 
     @NotNull
+    @Schema(required = true, example = "II. Hagen 7")
     private String strasse;
 
     @NotNull
+    @Schema(required = true, example = "45127")
     private String plz;
 
     @NotNull
+    @Schema(required = true, example = "Essen")
     private String ort;
 
     protected LieferAdresseDTO() {

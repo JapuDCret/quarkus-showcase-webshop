@@ -4,6 +4,7 @@ import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Aggregate "Bestellung"
@@ -80,10 +81,18 @@ public class Bestellung implements Serializable {
 
         private Builder() { }
 
-        public Builder setBestellId(@NotNull BestellId bestellId) {
-            this.bestellId = bestellId;
+        private BestellId generateBestellId() {
+            // see https://stackoverflow.com/questions/14622622/generating-a-random-hex-string-of-length-50-in-java-me-j2me/14623245
+            final int totalCharCounter = 32;
+            final String baseString = "be771e771d";
 
-            return this;
+            Random r = new Random();
+            StringBuffer sb = new StringBuffer(baseString);
+            while(sb.length() < (totalCharCounter)){
+                sb.append(Integer.toHexString(r.nextInt()));
+            }
+
+            return new BestellId(sb.toString().substring(0, totalCharCounter));
         }
 
         public Builder setProduktListe(@NotNull ProduktListe produktListe) {
@@ -111,9 +120,6 @@ public class Bestellung implements Serializable {
          * @throws ValidationException wenn nicht alle notwendigen Felder gefüllt wurden
          */
         public Bestellung build() {
-            if(this.bestellId == null) {
-                throw new ValidationException("Bestellung.Builder: BestellId darf nicht 'null' sein!");
-            }
             if(this.produktListe == null) {
                 throw new ValidationException("Bestellung.Builder: ProduktListe darf nicht 'null' sein!");
             }
@@ -123,6 +129,7 @@ public class Bestellung implements Serializable {
 //            if(this.rechnungsAdresse == null) {
 //                throw new ValidationException("Bestellung.Builder: Rechnungsadresse darf nicht 'null' sein!");
 //            }
+            this.bestellId = generateBestellId();
 
             return new Bestellung(this);
         }
