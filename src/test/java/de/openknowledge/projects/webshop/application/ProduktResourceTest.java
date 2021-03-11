@@ -31,7 +31,6 @@ import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +47,7 @@ class ProduktResourceTest {
   private ProduktRepository repository;
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     Mockito.lenient().doCallRealMethod().when(repository).read();
   }
 
@@ -60,7 +59,7 @@ class ProduktResourceTest {
   }};
 
   @Test
-  void getProdukteShouldReturnProduktliste() {
+  public void getProdukteShouldReturnProduktliste() {
     Mockito.doReturn(PROVIDED_PRODUKTLISTE).when(repository).read();
 
     Response response = resource.getProdukte();

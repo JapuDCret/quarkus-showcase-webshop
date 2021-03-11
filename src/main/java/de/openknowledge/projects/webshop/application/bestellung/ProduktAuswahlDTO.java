@@ -21,6 +21,12 @@ public class ProduktAuswahlDTO implements Serializable {
         super();
     }
 
+    public ProduktAuswahlDTO(@NotNull String name, int anzahl) {
+        this();
+        this.name = name;
+        this.anzahl = anzahl;
+    }
+
     public String getName() {
         return name;
     }

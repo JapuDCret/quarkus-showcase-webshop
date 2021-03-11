@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Postleitzahl implements Serializable  {
     private static final long serialVersionUID = -5034920939044989117L;
 
-    public final String plz;
+    private final String plz;
 
     public Postleitzahl(@NotNull String plz) {
         if(plz.length() != 5) {

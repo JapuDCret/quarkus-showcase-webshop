@@ -10,11 +10,15 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BestellDomainService {
 
-    @Inject
     private BestellRepository bestellRepository;
 
-    @Inject
     private ZahlungsRepository zahlungsRepository;
+
+    @Inject
+    public BestellDomainService(BestellRepository bestellRepository, ZahlungsRepository zahlungsRepository) {
+        this.bestellRepository = bestellRepository;
+        this.zahlungsRepository = zahlungsRepository;
+    }
 
     public Zahlung create(Bestellung bestellung) {
         bestellRepository.create(bestellung);

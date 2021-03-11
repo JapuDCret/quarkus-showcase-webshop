@@ -20,11 +20,15 @@ public class BestellApplicationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BestellApplicationService.class);
 
-    @Inject
     private ProduktRepository produktRepository;
 
-    @Inject
     private BestellDomainService bestellService;
+
+    @Inject
+    public BestellApplicationService(ProduktRepository produktRepository, BestellDomainService bestellService) {
+        this.produktRepository = produktRepository;
+        this.bestellService = bestellService;
+    }
 
     public @NotNull ZahlungsAufforderungDTO placeBestellung(@NotNull final BestellungDTO dto) {
         Bestellung bestellung = this.convertBestellung(dto);
@@ -41,7 +45,7 @@ public class BestellApplicationService {
                 bestellung.getProduktListe().getBetrag().doubleValue()
         );
 
-        LOG.info("Gege {} zurück", zahlungsAufforderung);
+        LOG.info("Gebe {} zurück", zahlungsAufforderung);
 
         return zahlungsAufforderung;
     }

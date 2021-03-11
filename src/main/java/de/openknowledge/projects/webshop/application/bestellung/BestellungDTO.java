@@ -22,6 +22,11 @@ public class BestellungDTO implements Serializable {
         super();
     }
 
+    public BestellungDTO(@NotNull List<ProduktAuswahlDTO> produktListe, @NotNull LieferAdresseDTO lieferAdresse) {
+        this.produktListe = produktListe;
+        this.lieferAdresse = lieferAdresse;
+    }
+
     public List<ProduktAuswahlDTO> getProduktListe() {
         return produktListe;
     }

@@ -33,6 +33,15 @@ public class LieferAdresseDTO implements Serializable {
         super();
     }
 
+    public LieferAdresseDTO(@NotNull String vorName, @NotNull String nachName, @NotNull String strasse, @NotNull String plz, @NotNull String ort) {
+        this();
+        this.vorName = vorName;
+        this.nachName = nachName;
+        this.strasse = strasse;
+        this.plz = plz;
+        this.ort = ort;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

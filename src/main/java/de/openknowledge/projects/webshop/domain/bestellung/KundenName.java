@@ -19,6 +19,14 @@ public class KundenName implements Serializable {
         this.nachname = nachname;
     }
 
+    public String getVorname() {
+        return vorname;
+    }
+
+    public String getNachname() {
+        return nachname;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

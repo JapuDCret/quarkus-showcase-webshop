@@ -10,7 +10,7 @@ import java.util.Objects;
 public class StadtName implements Serializable  {
     private static final long serialVersionUID = 4457309026656725986L;
     
-    public final String name;
+    private final String name;
 
     public StadtName(@NotNull String name) {
         this.name = name;
