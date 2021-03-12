@@ -8,3 +8,12 @@ produkt:
   - ID: 3
     NAME: Ciabatta
     PREIS: 1.5
+  - ID: 4
+    NAME: Getränk
+    PREIS: 2.0
+  - ID: 5
+    NAME: Dip
+    PREIS: 1.0
+  - ID: 6
+    NAME: Dressing
+    PREIS: 0.5

@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package de.openknowledge.projects.greet;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package de.openknowledge.projects.webshop;
 
 import com.github.database.rider.cdi.api.DBRider;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
-
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusTest;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,8 +34,7 @@ import org.testcontainers.utility.MountableFile;
 
 import java.time.Duration;
 
-import io.quarkus.test.common.QuarkusTestResource;
-import io.quarkus.test.junit.QuarkusTest;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Postman test runner for the application.
@@ -44,16 +42,16 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @QuarkusTestResource(DatabaseTestResource.class)
 @DBRider
-@DataSet(value = "greetings.yml", strategy = SeedStrategy.CLEAN_INSERT, skipCleaningFor = "flyway_schema_history")
-class GreetPostmanIT {
+@DataSet(value = "webshop.yml", strategy = SeedStrategy.CLEAN_INSERT, skipCleaningFor = "flyway_schema_history")
+class BestellPostmanIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GreetPostmanIT.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BestellPostmanIT.class);
 
   private static final GenericContainer<?> NEWMAN = new GenericContainer<>("postman/newman:5.1.0-alpine")
-      .withCopyFileToContainer(MountableFile.forClasspathResource("postman/hello-world.postman_collection.json"),
-                               "/etc/newman/hello-world.postman_collection.json")
-      .withCopyFileToContainer(MountableFile.forClasspathResource("postman/hello-world.postman_environment.json"),
-                               "/etc/newman/hello-world.postman_environment.json")
+      .withCopyFileToContainer(MountableFile.forClasspathResource("postman/test-webshop.postman_collection.json"),
+                               "/etc/newman/test-webshop.postman_collection.json")
+      .withCopyFileToContainer(MountableFile.forClasspathResource("postman/test-webshop.postman_environment.json"),
+                               "/etc/newman/test-webshop.postman_environment.json")
       .withFileSystemBind("target/postman/reports", "/etc/newman/reports", BindMode.READ_WRITE)
       .withStartupCheckStrategy(new OneShotStartupCheckStrategy().withTimeout(Duration.ofSeconds(5)));
 
@@ -66,10 +64,10 @@ class GreetPostmanIT {
 
   @Test
   void run() {
-    NEWMAN.withCommand("run", "hello-world.postman_collection.json",
-                       "--environment=hello-world.postman_environment.json",
+    NEWMAN.withCommand("run", "test-webshop.postman_collection.json",
+                       "--environment=test-webshop.postman_environment.json",
                        "--reporters=cli,junit",
-                       "--reporter-junit-export=reports/hello-world.newman-report.xml");
+                       "--reporter-junit-export=reports/test-webshop.newman-report.xml");
     NEWMAN.start();
 
     LOG.info(NEWMAN.getLogs());

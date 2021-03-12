@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "fbbdc7c6-2913-4d6b-9e8b-537f708f2fe9",
+		"name": "Webshop Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bestellung",
+			"item": [
+				{
+					"name": "Get Produkte",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response code is 'ok'\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is valid\", function () {\r",
+									"    var schema = {\r",
+									"        \"type\": \"array\",\r",
+									"        \"items\": [\r",
+									"            {\r",
+									"                \"type\": \"object\",\r",
+									"                \"properties\": {\r",
+									"                    \"name\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"preis\": {\r",
+									"                        \"type\": \"number\"\r",
+									"                    }\r",
+									"                },\r",
+									"                \"required\": [\r",
+									"                    \"name\",\r",
+									"                    \"preis\"\r",
+									"                ]\r",
+									"            }\r",
+									"        ]\r",
+									"    };\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"const expectedNames = [ \"Salat\", \"Bowl\", \"Ciabatta\", \"Getränk\", \"Dip\", \"Dressing\" ];\r",
+									"\r",
+									"pm.test(\"Content is valid\", function () {\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    _.each(data, (item) => {\r",
+									"        pm.expect(item.name).to.be.oneOf(expectedNames);\r",
+									"    })\r",
+									"    pm.expect(data.length).to.be.eq(expectedNames.length);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/produkt/",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"produkt",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bestellung 'Salat'",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response code is 'created'\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is valid\", function () {\r",
+									"    var schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"bestellId\": {\r",
+									"                \"type\": \"string\"\r",
+									"            },\r",
+									"            \"betrag\": {\r",
+									"                \"type\": \"number\"\r",
+									"            },\r",
+									"            \"zahlungsId\": {\r",
+									"                \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"required\": [\r",
+									"            \"bestellId\",\r",
+									"            \"betrag\",\r",
+									"            \"zahlungsId\"\r",
+									"        ]\r",
+									"    };\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"const expectedBetrag = 12.5;\r",
+									"\r",
+									"pm.test(\"Content is valid\", function () {\r",
+									"    pm.globals.clear(\"webshop_bestellId\");\r",
+									"    pm.globals.clear(\"webshop_zahlungsId\");\r",
+									"\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    pm.expect(data.betrag).to.be.eq(expectedBetrag);\r",
+									"\r",
+									"    pm.globals.set(\"webshop_bestellId\", data.bestellId);\r",
+									"    pm.globals.set(\"webshop_zahlungsId\", data.zahlungsId);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"lieferAdresse\": {\r\n    \"vorName\": \"Max\",\r\n    \"nachName\": \"Mustermann\",\r\n    \"strasse\": \"II. Hagen 7\",\r\n    \"plz\": \"45127\",\r\n    \"ort\": \"Essen\"\r\n  },\r\n  \"produktListe\": [\r\n    {\r\n      \"anzahl\": 1,\r\n      \"name\": \"Salat\"\r\n    },\r\n    {\r\n      \"anzahl\": 1,\r\n      \"name\": \"Ciabatta\"\r\n    },\r\n    {\r\n      \"anzahl\": 1,\r\n      \"name\": \"Getränk\"\r\n    },\r\n    {\r\n      \"anzahl\": 1,\r\n      \"name\": \"Dressing\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{url}}/bestellung/",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bestellung",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Zahlung",
+			"item": [
+				{
+					"name": "Get Zahlungen",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response code is 'ok'\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is valid\", function () {\r",
+									"    var schema = {\r",
+									"        \"type\": \"array\",\r",
+									"        \"items\": [\r",
+									"                {\r",
+									"                \"type\": \"object\",\r",
+									"                \"properties\": {\r",
+									"                    \"autorisiert\": {\r",
+									"                        \"type\": \"boolean\"\r",
+									"                    },\r",
+									"                    \"bestellId\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"betrag\": {\r",
+									"                        \"type\": \"number\"\r",
+									"                    },\r",
+									"                    \"zahlungsId\": {\r",
+									"                        \"type\": \"string\"\r",
+									"                    }\r",
+									"                },\r",
+									"                \"required\": [\r",
+									"                    \"autorisiert\",\r",
+									"                    \"bestellId\",\r",
+									"                    \"betrag\",\r",
+									"                    \"zahlungsId\"\r",
+									"                ]\r",
+									"            }\r",
+									"        ]\r",
+									"    };\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check global variables\", function () {\r",
+									"    pm.expect(pm.globals.has(\"webshop_bestellId\")).to.be.true;\r",
+									"    pm.expect(pm.globals.has(\"webshop_bestellId\")).to.be.true;\r",
+									"\r",
+									"    const expectedBestellId = pm.globals.get(\"webshop_bestellId\");\r",
+									"    const expectedZahlungsId = pm.globals.get(\"webshop_zahlungsId\");\r",
+									"\r",
+									"    pm.expect(expectedBestellId).to.not.be.null;\r",
+									"    pm.expect(expectedBestellId).to.be.string;\r",
+									"    pm.expect(expectedZahlungsId).to.not.be.null;\r",
+									"    pm.expect(expectedZahlungsId).to.be.string;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content is valid\", function () {\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"\r",
+									"    const expectedBestellId = pm.globals.get(\"webshop_bestellId\");\r",
+									"    const expectedZahlungsId = pm.globals.get(\"webshop_zahlungsId\");\r",
+									"\r",
+									"    var isContained = false;\r",
+									"    var zahlung = null;\r",
+									"    for(var item of data) {\r",
+									"        if(expectedBestellId === item.bestellId && expectedZahlungsId === item.zahlungsId) {\r",
+									"            zahlung = item;\r",
+									"            isContained = true;\r",
+									"            break;\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(isContained).to.be.true;\r",
+									"    pm.expect(zahlung).to.not.be.null;\r",
+									"\r",
+									"    pm.expect(zahlung.autorisiert).to.be.false;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/zahlung/",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zahlung",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authorize Zahlung 'Salat'",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response code is 'accepted'\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"    pm.response.to.be.accepted;\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Schema is valid\", function () {\r",
+									"    var schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"autorisiert\": {\r",
+									"                \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"bestellId\": {\r",
+									"                \"type\": \"string\"\r",
+									"            },\r",
+									"            \"betrag\": {\r",
+									"                \"type\": \"number\"\r",
+									"            },\r",
+									"            \"zahlungsId\": {\r",
+									"                \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"required\": [\r",
+									"            \"autorisiert\",\r",
+									"            \"bestellId\",\r",
+									"            \"betrag\",\r",
+									"            \"zahlungsId\"\r",
+									"        ]\r",
+									"    };\r",
+									"    var data = JSON.parse(responseBody);\r",
+									"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check global variables\", function () {\r",
+									"    pm.expect(pm.globals.has(\"webshop_bestellId\")).to.be.true;\r",
+									"    pm.expect(pm.globals.has(\"webshop_bestellId\")).to.be.true;\r",
+									"\r",
+									"    const expectedBestellId = pm.globals.get(\"webshop_bestellId\");\r",
+									"    const expectedZahlungsId = pm.globals.get(\"webshop_zahlungsId\");\r",
+									"\r",
+									"    pm.expect(expectedBestellId).to.not.be.null;\r",
+									"    pm.expect(expectedBestellId).to.be.string;\r",
+									"    pm.expect(expectedZahlungsId).to.not.be.null;\r",
+									"    pm.expect(expectedZahlungsId).to.be.string;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content is valid\", function () {\r",
+									"    var zahlung = JSON.parse(responseBody);\r",
+									"\r",
+									"    const expectedBestellId = pm.globals.get(\"webshop_bestellId\");\r",
+									"    const expectedZahlungsId = pm.globals.get(\"webshop_zahlungsId\");\r",
+									"\r",
+									"    pm.expect(zahlung.bestellId).to.be.eq(expectedBestellId);\r",
+									"    pm.expect(zahlung.zahlungsId).to.be.eq(expectedZahlungsId);\r",
+									"\r",
+									"    pm.expect(zahlung.autorisiert).to.be.true;\r",
+									"\r",
+									"    pm.globals.clear(\"webshop_bestellId\");\r",
+									"    pm.globals.clear(\"webshop_zahlungsId\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/zahlung/{{webshop_zahlungsId}}/authorize",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zahlung",
+								"{{webshop_zahlungsId}}",
+								"authorize"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
