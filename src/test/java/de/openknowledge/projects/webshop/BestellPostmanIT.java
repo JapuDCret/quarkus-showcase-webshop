@@ -72,6 +72,6 @@ class BestellPostmanIT {
 
     LOG.info(NEWMAN.getLogs());
 
-    assertThat(NEWMAN.getCurrentContainerInfo().getState().getExitCode()).isZero();
+    assertThat(NEWMAN.getCurrentContainerInfo().getState().getExitCodeLong()).isZero();
   }
 }

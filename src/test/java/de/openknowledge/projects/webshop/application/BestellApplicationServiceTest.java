@@ -19,8 +19,8 @@ import de.openknowledge.projects.webshop.application.bestellung.*;
 import de.openknowledge.projects.webshop.domain.bestellung.*;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
+import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
 import org.assertj.core.api.Assertions;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,15 +29,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for the resource {@link ProduktResource}.
@@ -46,12 +41,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BestellApplicationServiceTest {
 
   @InjectMocks
-  private BestellApplicationService service;
+  private BestellApplicationService bestellApplicationService;
 
   @Mock
   private ProduktRepository produktRepository;
 
-  @Inject
   private BestellRepository bestellRepository;
 
   private List<ProduktAuswahl> produkte;
@@ -60,6 +54,11 @@ class BestellApplicationServiceTest {
 
   @BeforeEach
   public void setUp() {
+    ZahlungsRepository zahlungsRepository = new ZahlungsRepository();
+    this.bestellRepository = new BestellRepository();
+    BestellDomainService bestellDomainService = new BestellDomainService(this.bestellRepository, zahlungsRepository);
+    this.bestellApplicationService = new BestellApplicationService(this.produktRepository, bestellDomainService);
+
     ProduktListe.Builder produktListenBuilder = ProduktListe.Builder();
 
     produktListenBuilder.addProdukt(
@@ -90,11 +89,15 @@ class BestellApplicationServiceTest {
   }
 
   @Test
-  public void getProdukteShouldReturnProduktliste() {
+  public void placeBestellungShouldCreateBestellung() {
+    for(ProduktAuswahl auswahl : this.produkte) {
+      Mockito.doReturn(Optional.of(auswahl.getProdukt())).when(produktRepository).findByName(auswahl.getProdukt().getName());
+    }
+
     // assert initial conditions
     Assertions.assertThat(bestellRepository.read().size())
-            .isEqualTo(0)
-            .describedAs("Es existieren keine Bestellungen");
+            .describedAs("Es existieren keine Bestellungen")
+            .isEqualTo(0);
 
     // create DTO
     List<ProduktAuswahlDTO> produktDTOListe = new ArrayList<>() {{
@@ -112,30 +115,33 @@ class BestellApplicationServiceTest {
     BestellungDTO bestellungDTO = new BestellungDTO(produktDTOListe, lieferAdresseDTO);
 
     // do call
-    ZahlungsAufforderungDTO zahlungsAufforderung = this.service.placeBestellung(bestellungDTO);
+    ZahlungsAufforderungDTO zahlungsAufforderung = this.bestellApplicationService.placeBestellung(bestellungDTO);
+
+    Mockito.verifyNoMoreInteractions(produktRepository);
 
     // verify
     Assertions.assertThat(zahlungsAufforderung.getBetrag())
-            .isEqualTo(bestellung.getProduktListe().getBetrag().doubleValue())
-            .describedAs("Beträge sind gleich");
+            .describedAs("Beträge sind gleich")
+            .isEqualTo(bestellung.getProduktListe().getBetrag().doubleValue());
 
     Assertions.assertThat(bestellRepository.read().size())
-            .isEqualTo(1)
-            .describedAs("Es existiert eine Bestellungen");
+            .describedAs("Es existiert eine Bestellungen")
+            .isEqualTo(1);
 
     String bestellId = zahlungsAufforderung.getBestellId();
     Optional<Bestellung> optBestellung = bestellRepository.findById(bestellId);
-    Assertions.assertThat(optBestellung.isPresent())
-            .isTrue()
-            .describedAs("Bestellung mit id=\"%s\" existiert", bestellId);
+    Assertions
+            .assertThat(optBestellung.isPresent())
+            .describedAs("Bestellung mit id=\"%s\" existiert", bestellId)
+            .isTrue();
 
     Bestellung bestellung = optBestellung.get();
 
     Assertions.assertThat(bestellung.getProduktListe())
-            .isEqualTo(this.bestellung.getProduktListe())
-            .describedAs("Produktliste ist gleich");
+            .describedAs("Produktliste ist gleich")
+            .isEqualTo(this.bestellung.getProduktListe());
     Assertions.assertThat(bestellung.getLieferAdresse())
-            .isEqualTo(this.bestellung.getLieferAdresse())
-            .describedAs("Lieferadresse ist gleich");
+            .describedAs("Lieferadresse ist gleich")
+            .isEqualTo(this.bestellung.getLieferAdresse());
   }
 }

@@ -61,8 +61,8 @@ class ProduktRepositoryIT {
   }
 
   @Test
-  void findAllShouldReturnThreeItems() {
+  void findAllShouldReturnFiveItems() {
     PanacheQuery<Produkt> findAllQuery = repository.findAll();
-    Assertions.assertThat(findAllQuery.stream().count()).isEqualTo(3);
+    Assertions.assertThat(findAllQuery.stream().count()).isEqualTo(5);
   }
 }
