@@ -4,13 +4,21 @@ Feature: Bestellung
     When ein Kunde die verfügbaren Produkte abrufen möchte
     Then erhält er eine Liste mit 6 Produkten
 
-  Scenario Outline: Erstelle Bestellung
+  Scenario Outline: Bestelle Produkte
     Given Eine Bestellung mit den Lieferdaten "<vorname>", "<nachname>", "<strasse>", "<plz>", "<ort>"
-    When der Kunde bestellt die Produkte <p1_anzahl>-Mal "<p1_name>" und <p2_anzahl>-Mal "<p2_name>"
+    And den zur Auswahl stehenden Produkten:
+      | id | name     |
+      | 1  | Salat    |
+      | 2  | Dressing |
+      | 3  | Ciabatta |
+      | 4  | Dip      |
+      | 5  | Bowl     |
+      | 6  | Getränk  |
+    When der Kunde bestellt die Produkte "<produkt_auswahl>"
     Then erhält er eine Zahlungsaufforderung mit einem Betrag von <betrag>
 
     Examples:
-      | vorname   | nachname | strasse          | plz   | ort        | p1_name  | p1_anzahl | p2_name  | p2_anzahl | betrag |
-      | Christian | Weh      | Apolloplatz 42   | 11111 | Düsseldorf | Salat    | 1         | Dressing | 2         | 9.5    |
-      | Max       | Weh      | Lindenallee 1337 | 22222 | Berlin     | Ciabatta | 10        | Dip      | 5         | 20.0   |
-      | Stephan   | Mhm      | II. Hagen 7      | 33333 | Essen      | Bowl     | 2         | Getränk  | 2         | 26.0   |
+      | vorname   | nachname | strasse          | plz   | ort        | produkt_auswahl | betrag |
+      | Christian | Weh      | Apolloplatz 42   | 11111 | Düsseldorf | [1:1,2:1]       | 9.0    |
+      | Max       | Weh      | Lindenallee 1337 | 22222 | Berlin     | [3:10,4:5]      | 20.0   |
+      | Stephan   | Mhm      | II. Hagen 7      | 33333 | Essen      | [1:1,5:1,6:2]   | 23.5   |
