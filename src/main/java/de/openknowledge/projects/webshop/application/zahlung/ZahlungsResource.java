@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions
  * and limitations under the License.
  */
-package de.openknowledge.projects.webshop.application.zahlungsart;
+package de.openknowledge.projects.webshop.application.zahlung;
 
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
 import de.openknowledge.projects.webshop.domain.zahlung.ZahlungsId;
@@ -65,7 +65,7 @@ public class ZahlungsResource {
 
   @POST
   @Path("{zahlungsId}/authorize")
-  @APIResponse(responseCode = "202", description = "Zahlung aktualisiert", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
+  @APIResponse(responseCode = "201", description = "Zahlung aktualisiert", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
   @APIResponse(responseCode = "404", description = "Zahlung nicht gefunden")
   public Response getZahlungen(
           @PathParam("zahlungsId") final String zahlungsId

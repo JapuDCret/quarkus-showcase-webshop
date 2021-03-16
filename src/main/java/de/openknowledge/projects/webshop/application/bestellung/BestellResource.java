@@ -49,7 +49,7 @@ public class BestellResource {
 
     @PUT
     @Operation(operationId = "placeBestellung", description = "Bestellung wird abgeschickt")
-    @APIResponse(responseCode = "201", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsAufforderungDTO.class)))
+    @APIResponse(responseCode = "202", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsAufforderungDTO.class)))
     @APIResponse(responseCode = "400", description = "Bestellung abgelehnt")
     public Response placeBestellung(
             @RequestBody(name = "bestellung", required = true, content = @Content(schema = @Schema(implementation = BestellungDTO.class)))
