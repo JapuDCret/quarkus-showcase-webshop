@@ -1,5 +1,6 @@
 package de.openknowledge.projects.webshop.infrastructure.zahlungsart;
 
+import de.openknowledge.projects.webshop.domain.bestellung.BestellId;
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
 import de.openknowledge.projects.webshop.domain.zahlung.ZahlungsId;
 
@@ -19,10 +20,10 @@ public class ZahlungsRepository {
         return Collections.unmodifiableSet(this.zahlungen);
     }
 
-    public Optional<Zahlung> findById(@NotNull ZahlungsId zahlungsId) {
+    public Optional<Zahlung> findById(@NotNull BestellId bestellId) {
         return this.zahlungen
                 .stream()
-                .filter((zahlung) -> zahlung.getZahlungsId().equals(zahlungsId))
+                .filter((zahlung) -> zahlung.getBestellung().getBestellId().equals(bestellId))
                 .findAny();
     }
 

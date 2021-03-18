@@ -16,6 +16,7 @@
 package de.openknowledge.projects.webshop.application;
 
 import de.openknowledge.projects.webshop.application.bestellung.*;
+import de.openknowledge.projects.webshop.application.zahlung.ZahlungsAufforderungDTO;
 import de.openknowledge.projects.webshop.domain.bestellung.*;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
@@ -54,9 +55,8 @@ class BestellApplicationServiceTest {
 
   @BeforeEach
   public void setUp() {
-    ZahlungsRepository zahlungsRepository = new ZahlungsRepository();
     this.bestellRepository = new BestellRepository();
-    BestellDomainService bestellDomainService = new BestellDomainService(this.bestellRepository, zahlungsRepository);
+    BestellDomainService bestellDomainService = new BestellDomainService(this.bestellRepository);
     this.bestellApplicationService = new BestellApplicationService(this.produktRepository, bestellDomainService);
 
     ProduktListe.Builder produktListenBuilder = ProduktListe.Builder();
@@ -115,12 +115,12 @@ class BestellApplicationServiceTest {
     BestellungDTO bestellungDTO = new BestellungDTO(produktDTOListe, lieferAdresseDTO);
 
     // do call
-    ZahlungsAufforderungDTO zahlungsAufforderung = this.bestellApplicationService.placeBestellung(bestellungDTO);
+    BestellungInfoDTO bestellungInfo = this.bestellApplicationService.placeBestellung(bestellungDTO);
 
     Mockito.verifyNoMoreInteractions(produktRepository);
 
     // verify
-    Assertions.assertThat(zahlungsAufforderung.getBetrag())
+    Assertions.assertThat(bestellungInfo.getBetrag())
             .describedAs("Beträge sind gleich")
             .isEqualTo(bestellung.getProduktListe().getBetrag().doubleValue());
 
@@ -128,7 +128,7 @@ class BestellApplicationServiceTest {
             .describedAs("Es existiert eine Bestellungen")
             .isEqualTo(1);
 
-    String bestellId = zahlungsAufforderung.getBestellId();
+    String bestellId = bestellungInfo.getBestellId();
     Optional<Bestellung> optBestellung = bestellRepository.findById(bestellId);
     Assertions
             .assertThat(optBestellung.isPresent())

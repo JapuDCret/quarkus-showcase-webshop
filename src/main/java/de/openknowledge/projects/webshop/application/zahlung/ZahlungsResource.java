@@ -16,7 +16,6 @@
 package de.openknowledge.projects.webshop.application.zahlung;
 
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
-import de.openknowledge.projects.webshop.domain.zahlung.ZahlungsId;
 import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -29,7 +28,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,6 +45,10 @@ public class ZahlungsResource {
   @Inject
   public ZahlungsRepository repository;
 
+  @Inject
+  public ZahlungApplicationService service;
+
+  // TODO: remove
   @GET
   @APIResponse(responseCode = "200", description = "Zahlungsliste", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
   public Response getZahlungen() {
@@ -63,30 +65,36 @@ public class ZahlungsResource {
             .build();
   }
 
+  @GET
+  @Path("{bestellId}")
+  @APIResponse(responseCode = "200", description = "Info über die Zahlung", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
+  @APIResponse(responseCode = "404", description = "Zahlung nicht gefunden")
+  public Response getZahlung(
+          @PathParam("bestellId") final String bestellId
+  ) {
+    LOG.debug("Retrieving Zahlung for BestellId \"{}\"", bestellId);
+
+    ZahlungsInfoDTO zahlungsInfo = service.getZahlungInfo(bestellId);
+
+    LOG.debug("Returning {}", zahlungsInfo);
+
+    return Response.status(Response.Status.OK)
+            .entity(zahlungsInfo)
+            .build();
+  }
+
   @POST
-  @Path("{zahlungsId}/authorize")
+  @Path("{bestellId}/authorize")
   @APIResponse(responseCode = "201", description = "Zahlung aktualisiert", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
   @APIResponse(responseCode = "404", description = "Zahlung nicht gefunden")
-  public Response getZahlungen(
-          @PathParam("zahlungsId") final String zahlungsId
+  public Response authorizeZahlung(
+          @PathParam("bestellId") final String bestellId
   ) {
-    Optional<Zahlung> optZahlung = repository.findById(new ZahlungsId(zahlungsId));
+    LOG.debug("Authorizing Zahlung with BestellId \"{}\"", bestellId);
 
-    if(!optZahlung.isPresent()) {
-      LOG.warn("Keine Zahlung mit der Id \"{}\" gefunden", zahlungsId);
+    ZahlungsInfoDTO zahlungsInfo = service.authorize(bestellId);
 
-      return Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    Zahlung zahlung = optZahlung.get();
-
-    LOG.info("Autorisiere {}", zahlung);
-
-    zahlung.autorisiere();
-
-    repository.update(zahlung);
-
-    ZahlungsInfoDTO zahlungsInfo = ZahlungsInfoDTO.of(zahlung);
+    LOG.debug("Returning {}", zahlungsInfo);
 
     return Response.status(Response.Status.ACCEPTED)
             .entity(zahlungsInfo)

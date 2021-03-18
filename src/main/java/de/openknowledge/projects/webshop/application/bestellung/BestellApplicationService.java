@@ -1,7 +1,6 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.*;
-import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,24 +29,22 @@ public class BestellApplicationService {
         this.bestellService = bestellService;
     }
 
-    public @NotNull ZahlungsAufforderungDTO placeBestellung(@NotNull final BestellungDTO dto) {
+    public BestellungInfoDTO placeBestellung(@NotNull final BestellungDTO dto) {
+        LOG.debug("Convert {} to Bestellung", dto);
+
         Bestellung bestellung = this.convertBestellung(dto);
 
-        LOG.info("Persistiere {}", bestellung);
+        LOG.debug("Persisting {}", bestellung);
 
-        Zahlung zahlung = bestellService.create(bestellung);
+        bestellService.create(bestellung);
 
-        LOG.info("Bestellung persistiert, {} erzeugt", zahlung);
+        LOG.debug("Bestellung persisted, converting it to BestellInfoDTO");
 
-        ZahlungsAufforderungDTO zahlungsAufforderung = new ZahlungsAufforderungDTO(
-                bestellung.getBestellId().getId(),
-                zahlung.getZahlungsId().getId(),
-                bestellung.getProduktListe().getBetrag().doubleValue()
-        );
+        BestellungInfoDTO bestellungInfo = BestellungInfoDTO.of(bestellung);
 
-        LOG.info("Gebe {} zurück", zahlungsAufforderung);
+        LOG.debug("Returning {}", bestellung);
 
-        return zahlungsAufforderung;
+        return bestellungInfo;
     }
 
     private @NotNull Bestellung convertBestellung(@NotNull final BestellungDTO dto) {

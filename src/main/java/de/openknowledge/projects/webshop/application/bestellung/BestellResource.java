@@ -36,6 +36,7 @@ public class BestellResource {
     @Inject
     private BestellRepository repository;
 
+    // TODO: remove
     @GET
     public Response getBestellungen() {
         Set<Bestellung> bestellungen = repository.read();
@@ -49,20 +50,20 @@ public class BestellResource {
 
     @PUT
     @Operation(operationId = "placeBestellung", description = "Bestellung wird abgeschickt")
-    @APIResponse(responseCode = "202", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = ZahlungsAufforderungDTO.class)))
+    @APIResponse(responseCode = "202", description = "Bestellung angenommen", content = @Content(schema = @Schema(implementation = BestellungInfoDTO.class)))
     @APIResponse(responseCode = "400", description = "Bestellung abgelehnt")
     public Response placeBestellung(
             @RequestBody(name = "bestellung", required = true, content = @Content(schema = @Schema(implementation = BestellungDTO.class)))
-            @NotNull @Valid final BestellungDTO dto
+            @NotNull @Valid final BestellungDTO bestellungDTO
     ) {
-        LOG.info("Placing Bestellung {}", dto);
+        LOG.debug("Placing Bestellung {}", bestellungDTO);
 
-        ZahlungsAufforderungDTO zahlungsinfo = service.placeBestellung(dto);
+        BestellungInfoDTO bestellungInfoDTO = service.placeBestellung(bestellungDTO);
 
-        LOG.info("Bestellung created");
+        LOG.debug("Bestellung successfully placed, returning {}", bestellungInfoDTO);
 
         return Response.status(Response.Status.CREATED)
-                .entity(zahlungsinfo)
+                .entity(bestellungInfoDTO)
                 .build();
     }
 }
