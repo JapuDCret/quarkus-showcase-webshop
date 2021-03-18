@@ -7,21 +7,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class BestellungInfoDTO implements Serializable {
-    private static final long serialVersionUID = -4990855733147896887L;
+    private static final long serialVersionUID = 7328265679123102208L;
 
     @NotNull
-    private final String bestellId;
+    private final String bestellungId;
 
     @NotNull
     private final double betrag;
 
-    public BestellungInfoDTO(@NotNull String bestellId, @NotNull double betrag) {
-        this.bestellId = bestellId;
+    public BestellungInfoDTO(@NotNull String bestellungId, @NotNull double betrag) {
+        this.bestellungId = bestellungId;
         this.betrag = betrag;
     }
 
-    public String getBestellId() {
-        return bestellId;
+    public String getBestellungId() {
+        return bestellungId;
     }
 
     public double getBetrag() {
@@ -33,18 +33,18 @@ public class BestellungInfoDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BestellungInfoDTO that = (BestellungInfoDTO) o;
-        return Double.compare(that.betrag, betrag) == 0 && Objects.equals(bestellId, that.bestellId);
+        return Double.compare(that.betrag, betrag) == 0 && Objects.equals(bestellungId, that.bestellungId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bestellId, betrag);
+        return Objects.hash(bestellungId, betrag);
     }
 
     @Override
     public String toString() {
         return "BestellungInfoDTO{" +
-                "bestellId='" + bestellId + '\'' +
+                "bestellungId='" + bestellungId + '\'' +
                 ", betrag=" + betrag +
                 '}';
     }

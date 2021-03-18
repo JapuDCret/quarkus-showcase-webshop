@@ -17,13 +17,14 @@ package de.openknowledge.projects.webshop.application;
 
 import de.openknowledge.projects.webshop.application.bestellung.*;
 import de.openknowledge.projects.webshop.application.zahlung.ZahlungApplicationService;
-import de.openknowledge.projects.webshop.application.zahlung.ZahlungsInfoDTO;
+import de.openknowledge.projects.webshop.application.zahlung.ZahlungInfoDTO;
 import de.openknowledge.projects.webshop.domain.bestellung.*;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktAuswahl;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktListe;
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
-import de.openknowledge.projects.webshop.domain.zahlung.ZahlungsAutorisierung;
-import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
-import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
-import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
+import de.openknowledge.projects.webshop.domain.zahlung.ZahlungAutorisierung;
+import de.openknowledge.projects.webshop.infrastructure.zahlung.ZahlungRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Assume;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,15 +33,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import javax.ws.rs.NotFoundException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,9 +50,9 @@ class ZahlungApplicationServiceTest {
   private ZahlungApplicationService zahlungApplicationService;
 
   @Mock
-  private ZahlungsRepository zahlungsRepository;
+  private ZahlungRepository zahlungRepository;
 
-  private String bestellId;
+  private String bestellungId;
   private Zahlung baseZahlung;
 
   @BeforeEach
@@ -86,7 +83,7 @@ class ZahlungApplicationServiceTest {
             .setLieferadresse(lieferAdresse)
             .build();
 
-    this.bestellId = bestellung.getBestellId().getId();
+    this.bestellungId = bestellung.getBestellId().getId();
 
     Zahlung zahlung = Zahlung.Builder()
             .setBestellung(bestellung)
@@ -97,73 +94,73 @@ class ZahlungApplicationServiceTest {
 
   @Test
   public void authorizeWithMissingZahlungShouldThrowNotFoundException() {
-    Mockito.doReturn(Optional.empty()).when(zahlungsRepository).findById(Mockito.any(BestellId.class));
+    Mockito.doReturn(Optional.empty()).when(zahlungRepository).findById(Mockito.any(BestellungId.class));
 
     // do "authorize" call
     Assertions.catchThrowableOfType(() -> {
-      ZahlungsInfoDTO zahlungInfo = zahlungApplicationService.authorize(this.bestellId);
+      ZahlungInfoDTO zahlungInfo = zahlungApplicationService.authorize(this.bestellungId);
 
       Assertions.assertThat(zahlungInfo.isAutorisiert()).isTrue();
     }, NotFoundException.class);
 
-    Mockito.verifyNoMoreInteractions(zahlungsRepository);
-    Mockito.verify(zahlungsRepository).findById(Mockito.any(BestellId.class));
-    Mockito.verifyNoMoreInteractions(zahlungsRepository);
+    Mockito.verifyNoMoreInteractions(zahlungRepository);
+    Mockito.verify(zahlungRepository).findById(Mockito.any(BestellungId.class));
+    Mockito.verifyNoMoreInteractions(zahlungRepository);
   }
 
   @Test
   public void authorizeShouldSetAutorisierteAndZeitpunkt() {
     Optional<Zahlung> expectedZahlung = Optional.of(this.baseZahlung);
 
-    Mockito.doReturn(expectedZahlung).when(zahlungsRepository).findById(Mockito.any(BestellId.class));
-    Mockito.doNothing().when(zahlungsRepository).update(Mockito.any(Zahlung.class));
+    Mockito.doReturn(expectedZahlung).when(zahlungRepository).findById(Mockito.any(BestellungId.class));
+    Mockito.doNothing().when(zahlungRepository).update(Mockito.any(Zahlung.class));
 
     ZonedDateTime startTimeOfTest = ZonedDateTime.now();
 
     // assume the Zahlung exists
     {
-      Optional<Zahlung> zahlung = zahlungsRepository.findById(new BestellId(this.bestellId));
+      Optional<Zahlung> zahlung = zahlungRepository.findById(new BestellungId(this.bestellungId));
 
       Assume.assumeTrue(zahlung.isPresent());
     }
 
     // verify that Zahlung.autorisiert = false
     {
-      ZahlungsInfoDTO zahlungInfo = zahlungApplicationService.getZahlungInfo(this.bestellId);
+      ZahlungInfoDTO zahlungInfo = zahlungApplicationService.getZahlungInfo(this.bestellungId);
 
       Assertions.assertThat(zahlungInfo.isAutorisiert()).isFalse();
     }
 
     // do "authorize" call
     {
-      ZahlungsInfoDTO zahlungInfo = zahlungApplicationService.authorize(this.bestellId);
+      ZahlungInfoDTO zahlungInfo = zahlungApplicationService.authorize(this.bestellungId);
 
       Assertions.assertThat(zahlungInfo.isAutorisiert()).isTrue();
     }
 
     // verify that Zahlung.autorisiert = true
     {
-      ZahlungsInfoDTO zahlungInfo = zahlungApplicationService.getZahlungInfo(this.bestellId);
+      ZahlungInfoDTO zahlungInfo = zahlungApplicationService.getZahlungInfo(this.bestellungId);
 
       Assertions.assertThat(zahlungInfo.isAutorisiert()).isTrue();
     }
 
     // verify that the Zahlung in the repository is now also authorized
-    Optional<Zahlung> optZahlung = zahlungsRepository.findById(new BestellId(this.bestellId));
+    Optional<Zahlung> optZahlung = zahlungRepository.findById(new BestellungId(this.bestellungId));
 
     Assertions.assertThat(optZahlung.isPresent()).isTrue();
-    Optional<ZahlungsAutorisierung> optAutorisierung = optZahlung.get().getAutorisierung();
+    Optional<ZahlungAutorisierung> optAutorisierung = optZahlung.get().getAutorisierung();
 
     Assertions.assertThat(optAutorisierung.isPresent()).isTrue();
-    ZahlungsAutorisierung autorisierung = optAutorisierung.get();
+    ZahlungAutorisierung autorisierung = optAutorisierung.get();
 
-    // check if ZahlungsAutorisierung.zeitpunkt is after the start time of the test
+    // check if ZahlungAutorisierung.zeitpunkt is after the start time of the test
     Assertions.assertThat(autorisierung.getZeitpunkt()).isNotNull();
     Assertions.assertThat(autorisierung.getZeitpunkt().isAfter(startTimeOfTest)).isTrue();
 
     // verify that the Mock was called
-    Mockito.verify(zahlungsRepository, Mockito.times(5)).findById(Mockito.any(BestellId.class));
-    Mockito.verify(zahlungsRepository).update(Mockito.any(Zahlung.class));
-    Mockito.verifyNoMoreInteractions(zahlungsRepository);
+    Mockito.verify(zahlungRepository, Mockito.times(5)).findById(Mockito.any(BestellungId.class));
+    Mockito.verify(zahlungRepository).update(Mockito.any(Zahlung.class));
+    Mockito.verifyNoMoreInteractions(zahlungRepository);
   }
 }

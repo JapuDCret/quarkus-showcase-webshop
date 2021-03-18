@@ -17,7 +17,7 @@ package de.openknowledge.projects.webshop.application;
 
 import de.openknowledge.projects.webshop.application.bestellung.ProduktDTO;
 import de.openknowledge.projects.webshop.application.bestellung.ProduktResource;
-import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

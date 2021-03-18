@@ -1,4 +1,4 @@
-package de.openknowledge.projects.webshop.domain.bewertung;
+package de.openknowledge.projects.webshop.domain.zahlung;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -6,14 +6,14 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
- * ValueObject "BewertungsDatum"
+ * ValueObject "ZahlungAbschluss"
  */
-public class BewertungsDatum implements Serializable {
-    private static final long serialVersionUID = 2059564965389803732L;
+public class ZahlungAbschluss implements Serializable {
+    private static final long serialVersionUID = 6637119688915135741L;
 
     private final ZonedDateTime zeitpunkt;
 
-    public BewertungsDatum(@NotNull ZonedDateTime zeitpunkt) {
+    public ZahlungAbschluss(@NotNull ZonedDateTime zeitpunkt) {
         this.zeitpunkt = zeitpunkt;
     }
 
@@ -25,7 +25,7 @@ public class BewertungsDatum implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BewertungsDatum that = (BewertungsDatum) o;
+        ZahlungAbschluss that = (ZahlungAbschluss) o;
         return Objects.equals(zeitpunkt, that.zeitpunkt);
     }
 
@@ -36,7 +36,7 @@ public class BewertungsDatum implements Serializable {
 
     @Override
     public String toString() {
-        return "LieferZeitpunkt{" +
+        return "ZahlungAbschluss{" +
                 "zeitpunkt=" + zeitpunkt +
                 '}';
     }

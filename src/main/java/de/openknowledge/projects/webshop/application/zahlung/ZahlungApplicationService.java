@@ -1,9 +1,9 @@
 package de.openknowledge.projects.webshop.application.zahlung;
 
-import de.openknowledge.projects.webshop.domain.bestellung.BestellId;
+import de.openknowledge.projects.webshop.domain.bestellung.BestellungId;
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
-import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
+import de.openknowledge.projects.webshop.infrastructure.zahlung.ZahlungRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,17 +21,17 @@ public class ZahlungApplicationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZahlungApplicationService.class);
 
-    public ZahlungsRepository repository;
+    public ZahlungRepository repository;
 
     @Inject
-    public ZahlungApplicationService(ZahlungsRepository repository) {
+    public ZahlungApplicationService(ZahlungRepository repository) {
         this.repository = repository;
     }
 
     private Zahlung findByBestellId(@NotNull final String bestellId) {
         LOG.debug("Retrieving Zahlung with BestellId \"{}\" from repository", bestellId);
 
-        Optional<Zahlung> optZahlung = repository.findById(new BestellId(bestellId));
+        Optional<Zahlung> optZahlung = repository.findById(new BestellungId(bestellId));
 
         if(!optZahlung.isPresent()) {
             LOG.warn("Could not find Zahlung with BestellId \"{}\" gefunden", bestellId);
@@ -42,15 +42,15 @@ public class ZahlungApplicationService {
         return optZahlung.get();
     }
 
-    public ZahlungsInfoDTO getZahlungInfo(@NotNull final String bestellId) {
+    public ZahlungInfoDTO getZahlungInfo(@NotNull final String bestellId) {
         Zahlung zahlung = this.findByBestellId(bestellId);
 
         LOG.debug("Converting {} to DTO", zahlung);
 
-        return ZahlungsInfoDTO.of(zahlung);
+        return ZahlungInfoDTO.of(zahlung);
     }
 
-    public ZahlungsInfoDTO authorize(@NotNull final String bestellId) {
+    public ZahlungInfoDTO authorize(@NotNull final String bestellId) {
         Zahlung zahlung = this.findByBestellId(bestellId);
 
         LOG.debug("Authorizing {}", zahlung);
@@ -63,6 +63,6 @@ public class ZahlungApplicationService {
 
         LOG.debug("Converting {} to DTO", zahlung);
 
-        return ZahlungsInfoDTO.of(zahlung);
+        return ZahlungInfoDTO.of(zahlung);
     }
 }

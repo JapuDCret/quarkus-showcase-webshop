@@ -16,11 +16,12 @@
 package de.openknowledge.projects.webshop.application;
 
 import de.openknowledge.projects.webshop.application.bestellung.*;
-import de.openknowledge.projects.webshop.application.zahlung.ZahlungsAufforderungDTO;
 import de.openknowledge.projects.webshop.domain.bestellung.*;
-import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktAuswahl;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktListe;
+import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellungRepository;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
-import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,15 +48,18 @@ import java.util.Optional;
  * Test class for the resource {@link ProduktResource}.
  */
 @ExtendWith(MockitoExtension.class)
-class BestellApplicationServiceTest {
+class BestellungApplicationServiceTest {
 
   @InjectMocks
-  private BestellApplicationService bestellApplicationService;
+  private BestellungApplicationService bestellungApplicationService;
 
   @Mock
   private ProduktRepository produktRepository;
 
-  private BestellRepository bestellRepository;
+  @Mock
+  private Event<Bestellung> bestellungCreated;
+
+  private BestellungRepository bestellungRepository;
 
   private List<ProduktAuswahl> produkte;
   private LieferAdresse lieferAdresse;
@@ -55,9 +67,9 @@ class BestellApplicationServiceTest {
 
   @BeforeEach
   public void setUp() {
-    this.bestellRepository = new BestellRepository();
-    BestellDomainService bestellDomainService = new BestellDomainService(this.bestellRepository);
-    this.bestellApplicationService = new BestellApplicationService(this.produktRepository, bestellDomainService);
+    this.bestellungRepository = new BestellungRepository();
+    BestellungDomainService bestellungDomainService = new BestellungDomainService(this.bestellungRepository, this.bestellungCreated);
+    this.bestellungApplicationService = new BestellungApplicationService(this.produktRepository, bestellungDomainService);
 
     ProduktListe.Builder produktListenBuilder = ProduktListe.Builder();
 
@@ -94,14 +106,16 @@ class BestellApplicationServiceTest {
       Mockito.doReturn(Optional.of(auswahl.getProdukt())).when(produktRepository).findByName(auswahl.getProdukt().getName());
     }
 
+    Mockito.doNothing().when(bestellungCreated).fire(Mockito.any(Bestellung.class));
+
     // assert initial conditions
-    Assertions.assertThat(bestellRepository.read().size())
+    Assertions.assertThat(bestellungRepository.read().size())
             .describedAs("Es existieren keine Bestellungen")
             .isEqualTo(0);
 
     // create DTO
     List<ProduktAuswahlDTO> produktDTOListe = new ArrayList<>() {{
-      for(ProduktAuswahl auswahl : BestellApplicationServiceTest.this.produkte) {
+      for(ProduktAuswahl auswahl : BestellungApplicationServiceTest.this.produkte) {
         add(new ProduktAuswahlDTO(auswahl.getProdukt().getName(), auswahl.getAnzahl()));
       }
     }};
@@ -115,8 +129,9 @@ class BestellApplicationServiceTest {
     BestellungDTO bestellungDTO = new BestellungDTO(produktDTOListe, lieferAdresseDTO);
 
     // do call
-    BestellungInfoDTO bestellungInfo = this.bestellApplicationService.placeBestellung(bestellungDTO);
+    BestellungInfoDTO bestellungInfo = bestellungApplicationService.placeBestellung(bestellungDTO);
 
+    Mockito.verify(produktRepository, Mockito.times(produkte.size())).findByName(Mockito.anyString());
     Mockito.verifyNoMoreInteractions(produktRepository);
 
     // verify
@@ -124,12 +139,12 @@ class BestellApplicationServiceTest {
             .describedAs("Beträge sind gleich")
             .isEqualTo(bestellung.getProduktListe().getBetrag().doubleValue());
 
-    Assertions.assertThat(bestellRepository.read().size())
+    Assertions.assertThat(bestellungRepository.read().size())
             .describedAs("Es existiert eine Bestellungen")
             .isEqualTo(1);
 
-    String bestellId = bestellungInfo.getBestellId();
-    Optional<Bestellung> optBestellung = bestellRepository.findById(bestellId);
+    String bestellId = bestellungInfo.getBestellungId();
+    Optional<Bestellung> optBestellung = bestellungRepository.findById(bestellId);
     Assertions
             .assertThat(optBestellung.isPresent())
             .describedAs("Bestellung mit id=\"%s\" existiert", bestellId)
@@ -143,5 +158,8 @@ class BestellApplicationServiceTest {
     Assertions.assertThat(bestellung.getLieferAdresse())
             .describedAs("Lieferadresse ist gleich")
             .isEqualTo(this.bestellung.getLieferAdresse());
+
+    Mockito.verify(bestellungCreated).fire(Mockito.any(Bestellung.class));
+    Mockito.verifyNoMoreInteractions(bestellungCreated);
   }
 }

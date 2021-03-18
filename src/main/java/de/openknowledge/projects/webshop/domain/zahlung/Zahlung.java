@@ -15,24 +15,21 @@ import java.util.Random;
  * Aggregate "Zahlung"
  */
 public class Zahlung implements Serializable {
-    private static final long serialVersionUID = -286819606597490400L;
+    private static final long serialVersionUID = -4346739859581266957L;
 
     @NotNull
-    private final ZahlungsId zahlungsId;
+    private final ZahlungId zahlungId;
 
     @NotNull
     private final Bestellung bestellung;
 
-//    @NotNull
-//    private final ZahlungsArt zahlungsArt;
-
     @NotNull
     private final BigDecimal betrag;
 
-    private Optional<ZahlungsAutorisierung> autorisierung;
+    private Optional<ZahlungAutorisierung> autorisierung;
 
-    public ZahlungsId getZahlungsId() {
-        return zahlungsId;
+    public ZahlungId getZahlungId() {
+        return zahlungId;
     }
 
     public Bestellung getBestellung() {
@@ -43,12 +40,12 @@ public class Zahlung implements Serializable {
         return betrag;
     }
 
-    public Optional<ZahlungsAutorisierung> getAutorisierung() {
+    public Optional<ZahlungAutorisierung> getAutorisierung() {
         return autorisierung;
     }
 
     public void autorisiere() {
-        this.autorisierung = Optional.of(new ZahlungsAutorisierung(ZonedDateTime.now()));
+        this.autorisierung = Optional.of(new ZahlungAutorisierung(ZonedDateTime.now()));
     }
 
     @Override
@@ -56,18 +53,18 @@ public class Zahlung implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Zahlung zahlung = (Zahlung) o;
-        return Objects.equals(zahlungsId, zahlung.zahlungsId);
+        return Objects.equals(zahlungId, zahlung.zahlungId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(zahlungsId);
+        return Objects.hash(zahlungId);
     }
 
     @Override
     public String toString() {
         return "Zahlung{" +
-                "zahlungsId=" + zahlungsId +
+                "zahlungId=" + zahlungId +
                 ", bestellung=" + bestellung +
                 ", betrag=" + betrag +
                 ", autorisierung=" + autorisierung +
@@ -79,23 +76,21 @@ public class Zahlung implements Serializable {
     }
 
     private Zahlung(Builder b) {
-        this.zahlungsId = b.zahlungsId;
+        this.zahlungId = b.zahlungId;
         this.bestellung = b.bestellung;
-//        this.zahlungsArt = b.zahlungsArt;
         this.betrag = b.betrag;
         this.autorisierung = b.autorisierung;
     }
 
     public static class Builder {
-        private ZahlungsId zahlungsId;
+        private ZahlungId zahlungId;
         private Bestellung bestellung;
-//        private ZahlungsArt zahlungsArt;
         private BigDecimal betrag;
-        private Optional<ZahlungsAutorisierung> autorisierung = Optional.empty();
+        private Optional<ZahlungAutorisierung> autorisierung = Optional.empty();
 
         private Builder() { }
 
-        private ZahlungsId generateZahlungsId() {
+        private ZahlungId generateZahlungId() {
             // see https://stackoverflow.com/questions/14622622/generating-a-random-hex-string-of-length-50-in-java-me-j2me/14623245
             final int totalCharCounter = 32;
             final String baseString = "2a8749651d";
@@ -106,7 +101,7 @@ public class Zahlung implements Serializable {
                 sb.append(Integer.toHexString(r.nextInt()));
             }
 
-            return new ZahlungsId(sb.toString().substring(0, totalCharCounter));
+            return new ZahlungId(sb.toString().substring(0, totalCharCounter));
         }
 
         public Builder setBestellung(@NotNull Bestellung bestellung) {
@@ -115,13 +110,7 @@ public class Zahlung implements Serializable {
             return this;
         }
 
-//        public Builder setZahlungsArt(@NotNull ZahlungsArt zahlungsArt) {
-//            this.zahlungsArt = zahlungsArt;
-//
-//            return this;
-//        }
-
-        public Builder setAutorisierung(@NotNull Optional<ZahlungsAutorisierung> autorisierung) {
+        public Builder setAutorisierung(@NotNull Optional<ZahlungAutorisierung> autorisierung) {
             this.autorisierung = autorisierung;
 
             return this;
@@ -137,12 +126,9 @@ public class Zahlung implements Serializable {
             if(this.bestellung == null) {
                 throw new ValidationException("Zahlung.Builder: Bestellung darf nicht 'null' sein!");
             }
-//            if(this.zahlungsArt == null) {
-//                throw new ValidationException("Zahlung.Builder: ZahlungsArt darf nicht 'null' sein!");
-//            }
             // this.autorisierung darf null sein
 
-            this.zahlungsId = generateZahlungsId();
+            this.zahlungId = generateZahlungId();
             this.betrag = bestellung.getProduktListe().getBetrag();
 
             return new Zahlung(this);

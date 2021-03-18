@@ -6,14 +6,14 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
- * ValueObject "ZahlungsAbschluss"
+ * ValueObject "ZahlungAutorisierung"
  */
-public class ZahlungsAbschluss implements Serializable {
-    private static final long serialVersionUID = -1342989155932513122L;
+public class ZahlungAutorisierung implements Serializable {
+    private static final long serialVersionUID = -4610594283560671275L;
 
     private final ZonedDateTime zeitpunkt;
 
-    public ZahlungsAbschluss(@NotNull ZonedDateTime zeitpunkt) {
+    public ZahlungAutorisierung(@NotNull ZonedDateTime zeitpunkt) {
         this.zeitpunkt = zeitpunkt;
     }
 
@@ -25,7 +25,7 @@ public class ZahlungsAbschluss implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ZahlungsAbschluss that = (ZahlungsAbschluss) o;
+        ZahlungAutorisierung that = (ZahlungAutorisierung) o;
         return Objects.equals(zeitpunkt, that.zeitpunkt);
     }
 
@@ -36,7 +36,7 @@ public class ZahlungsAbschluss implements Serializable {
 
     @Override
     public String toString() {
-        return "LieferZeitpunkt{" +
+        return "ZahlungAutorisierung{" +
                 "zeitpunkt=" + zeitpunkt +
                 '}';
     }

@@ -20,7 +20,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import de.openknowledge.projects.webshop.DatabaseTestResource;
 import de.openknowledge.projects.webshop.application.bestellung.*;
-import de.openknowledge.projects.webshop.application.zahlung.ZahlungsInfoDTO;
+import de.openknowledge.projects.webshop.application.zahlung.ZahlungInfoDTO;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -41,12 +41,12 @@ import java.util.List;
  */
 @QuarkusTest
 @QuarkusTestResource(DatabaseTestResource.class)
-@TestHTTPEndpoint(BestellResource.class)
+@TestHTTPEndpoint(BestellungResource.class)
 @DBRider
 @DataSet(value = "webshop.yml", strategy = SeedStrategy.CLEAN_INSERT, skipCleaningFor = "flyway_schema_history")
-class BestellResourceIT {
+class BestellungResourceIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BestellResourceIT.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BestellungResourceIT.class);
 
   @Test
   void getBestellungenShouldReturn200And0Bestellungen() {
@@ -61,7 +61,7 @@ class BestellResourceIT {
   }
 
   @Test
-  void putBestellungShouldReturn202AndZahlungsInfo() {
+  void putBestellungShouldReturn202AndZahlungInfo() {
     // create DTO
     List<ProduktAuswahlDTO> produktDTOListe = new ArrayList<>() {{
       add(new ProduktAuswahlDTO("Salat", 2));
@@ -78,7 +78,7 @@ class BestellResourceIT {
     );
     BestellungDTO bestellungDTO = new BestellungDTO(produktDTOListe, lieferAdresseDTO);
 
-    ZahlungsInfoDTO zahlungsInfo = RestAssured.given()
+    ZahlungInfoDTO zahlungInfo = RestAssured.given()
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .when()
@@ -89,9 +89,9 @@ class BestellResourceIT {
             .contentType(MediaType.APPLICATION_JSON)
             .extract()
             .response()
-            .as(ZahlungsInfoDTO.class);
+            .as(ZahlungInfoDTO.class);
 
     // 8.5*2 + 0.5*2 + 1.5*2 + 2.0*1 = 23.0
-    Assertions.assertThat(zahlungsInfo.getBetrag()).isEqualTo(23.0d);
+    Assertions.assertThat(zahlungInfo.getBetrag()).isEqualTo(23.0d);
   }
 }

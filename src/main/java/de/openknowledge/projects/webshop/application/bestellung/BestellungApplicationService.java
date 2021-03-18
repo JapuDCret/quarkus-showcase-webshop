@@ -1,6 +1,9 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.*;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktAuswahl;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktListe;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +18,18 @@ import java.util.Optional;
  * A service that handles mapping from {@BestellungDTO} to {@link Bestellung}.
  */
 @ApplicationScoped
-public class BestellApplicationService {
+public class BestellungApplicationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BestellApplicationService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BestellungApplicationService.class);
 
     private ProduktRepository produktRepository;
 
-    private BestellDomainService bestellService;
+    private BestellungDomainService bestellungService;
 
     @Inject
-    public BestellApplicationService(ProduktRepository produktRepository, BestellDomainService bestellService) {
+    public BestellungApplicationService(ProduktRepository produktRepository, BestellungDomainService bestellungService) {
         this.produktRepository = produktRepository;
-        this.bestellService = bestellService;
+        this.bestellungService = bestellungService;
     }
 
     public BestellungInfoDTO placeBestellung(@NotNull final BestellungDTO dto) {
@@ -36,7 +39,7 @@ public class BestellApplicationService {
 
         LOG.debug("Persisting {}", bestellung);
 
-        bestellService.create(bestellung);
+        bestellungService.create(bestellung);
 
         LOG.debug("Bestellung persisted, converting it to BestellInfoDTO");
 

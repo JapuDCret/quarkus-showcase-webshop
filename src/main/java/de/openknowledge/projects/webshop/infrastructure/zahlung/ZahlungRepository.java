@@ -1,8 +1,7 @@
-package de.openknowledge.projects.webshop.infrastructure.zahlungsart;
+package de.openknowledge.projects.webshop.infrastructure.zahlung;
 
-import de.openknowledge.projects.webshop.domain.bestellung.BestellId;
+import de.openknowledge.projects.webshop.domain.bestellung.BestellungId;
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
-import de.openknowledge.projects.webshop.domain.zahlung.ZahlungsId;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -10,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @ApplicationScoped
-public class ZahlungsRepository {
+public class ZahlungRepository {
     private final Set<Zahlung> zahlungen = new HashSet<>();
 
     @PostConstruct
@@ -20,10 +19,10 @@ public class ZahlungsRepository {
         return Collections.unmodifiableSet(this.zahlungen);
     }
 
-    public Optional<Zahlung> findById(@NotNull BestellId bestellId) {
+    public Optional<Zahlung> findById(@NotNull BestellungId bestellungId) {
         return this.zahlungen
                 .stream()
-                .filter((zahlung) -> zahlung.getBestellung().getBestellId().equals(bestellId))
+                .filter((zahlung) -> zahlung.getBestellung().getBestellId().equals(bestellungId))
                 .findAny();
     }
 

@@ -43,9 +43,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @QuarkusTestResource(DatabaseTestResource.class)
 @DBRider
 @DataSet(value = "webshop.yml", strategy = SeedStrategy.CLEAN_INSERT, skipCleaningFor = "flyway_schema_history")
-class BestellPostmanIT {
+class BestellungPostmanIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BestellPostmanIT.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BestellungPostmanIT.class);
 
   private static final GenericContainer<?> NEWMAN = new GenericContainer<>("postman/newman:5.1.0-alpine")
       .withCopyFileToContainer(MountableFile.forClasspathResource("postman/test-webshop.postman_collection.json"),

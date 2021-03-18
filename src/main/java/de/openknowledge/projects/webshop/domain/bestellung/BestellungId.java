@@ -1,17 +1,17 @@
-package de.openknowledge.projects.webshop.domain.zahlung;
+package de.openknowledge.projects.webshop.domain.bestellung;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * ValueObject "ZahlungsId"
+ * ValueObject "BestellungId"
  */
-public class ZahlungsId implements Comparable<ZahlungsId>, Serializable {
-    private static final long serialVersionUID = -7217028524904547944L;
+public class BestellungId implements Comparable<BestellungId>, Serializable {
+    private static final long serialVersionUID = -8686851430840544576L;
 
     private final String id;
 
-    public ZahlungsId(String id) {
+    public BestellungId(String id) {
         this.id = id;
     }
 
@@ -23,8 +23,8 @@ public class ZahlungsId implements Comparable<ZahlungsId>, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ZahlungsId bestellId = (ZahlungsId) o;
-        return Objects.equals(id, bestellId.id);
+        BestellungId bestellungId = (BestellungId) o;
+        return Objects.equals(id, bestellungId.id);
     }
 
     @Override
@@ -33,13 +33,13 @@ public class ZahlungsId implements Comparable<ZahlungsId>, Serializable {
     }
 
     @Override
-    public int compareTo(ZahlungsId that) {
+    public int compareTo(BestellungId that) {
         return this.id.compareTo(that.id);
     }
 
     @Override
     public String toString() {
-        return "ZahlungsId{" +
+        return "BestellungId{" +
                 "id='" + id + '\'' +
                 '}';
     }

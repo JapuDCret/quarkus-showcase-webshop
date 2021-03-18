@@ -1,10 +1,9 @@
-package de.openknowledge.projects.webshop.domain.bestellung;
+package de.openknowledge.projects.webshop.domain.bestellung.produkt;
 
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

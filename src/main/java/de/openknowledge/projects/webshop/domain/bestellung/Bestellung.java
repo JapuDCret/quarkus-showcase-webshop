@@ -1,5 +1,7 @@
 package de.openknowledge.projects.webshop.domain.bestellung;
 
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktListe;
+
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,7 +15,7 @@ public class Bestellung implements Serializable {
     private static final long serialVersionUID = 2473222120737283076L;
 
     @NotNull
-    private final BestellId bestellId;
+    private final BestellungId bestellungId;
 
     @NotNull
     private final ProduktListe produktListe;
@@ -24,8 +26,8 @@ public class Bestellung implements Serializable {
 //    @NotNull
 //    private final RechnungsAdresse rechnungsAdresse;
 
-    public BestellId getBestellId() {
-        return bestellId;
+    public BestellungId getBestellId() {
+        return bestellungId;
     }
 
     public ProduktListe getProduktListe() {
@@ -45,12 +47,12 @@ public class Bestellung implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bestellung that = (Bestellung) o;
-        return Objects.equals(bestellId, that.bestellId);
+        return Objects.equals(bestellungId, that.bestellungId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bestellId);
+        return Objects.hash(bestellungId);
     }
 
     @Override
@@ -67,21 +69,21 @@ public class Bestellung implements Serializable {
     }
 
     public Bestellung(Builder b) {
-        this.bestellId = b.bestellId;
+        this.bestellungId = b.bestellungId;
         this.produktListe = b.produktListe;
         this.lieferAdresse = b.lieferAdresse;
 //        this.rechnungsAdresse = b.rechnungsAdresse;
     }
 
     public static class Builder {
-        private BestellId bestellId;
+        private BestellungId bestellungId;
         private ProduktListe produktListe;
         private LieferAdresse lieferAdresse;
         private RechnungsAdresse rechnungsAdresse;
 
         private Builder() { }
 
-        private BestellId generateBestellId() {
+        private BestellungId generateBestellId() {
             // see https://stackoverflow.com/questions/14622622/generating-a-random-hex-string-of-length-50-in-java-me-j2me/14623245
             final int totalCharCounter = 32;
             final String baseString = "be771e771d";
@@ -92,7 +94,7 @@ public class Bestellung implements Serializable {
                 sb.append(Integer.toHexString(r.nextInt()));
             }
 
-            return new BestellId(sb.toString().substring(0, totalCharCounter));
+            return new BestellungId(sb.toString().substring(0, totalCharCounter));
         }
 
         public Builder setProduktListe(@NotNull ProduktListe produktListe) {
@@ -114,7 +116,7 @@ public class Bestellung implements Serializable {
 //        }
 
         /**
-         * baut eine Instanz von Bestellung, wenn die Felder {@link #bestellId}, {@link #produktListe}, {@link #lieferAdresse} und {@link #rechnungsAdresse} befüllt sind
+         * baut eine Instanz von Bestellung, wenn die Felder {@link #bestellungId}, {@link #produktListe}, {@link #lieferAdresse} und {@link #rechnungsAdresse} befüllt sind
          *
          * @return Bestellung
          * @throws ValidationException wenn nicht alle notwendigen Felder gefüllt wurden
@@ -129,7 +131,7 @@ public class Bestellung implements Serializable {
 //            if(this.rechnungsAdresse == null) {
 //                throw new ValidationException("Bestellung.Builder: Rechnungsadresse darf nicht 'null' sein!");
 //            }
-            this.bestellId = generateBestellId();
+            this.bestellungId = generateBestellId();
 
             return new Bestellung(this);
         }

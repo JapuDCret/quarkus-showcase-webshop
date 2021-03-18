@@ -1,7 +1,7 @@
 package de.openknowledge.projects.webshop.domain.zahlung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
-import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
+import de.openknowledge.projects.webshop.infrastructure.zahlung.ZahlungRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class ZahlungDomainService {
     private static final Logger LOG = LoggerFactory.getLogger(ZahlungDomainService.class);
 
     @Inject
-    private ZahlungsRepository zahlungsRepository;
+    private ZahlungRepository zahlungRepository;
 
     public void observeBestellungCreated(@Observes Bestellung bestellung) {
         LOG.debug("Creating Zahlung from {}", bestellung);
@@ -26,6 +26,6 @@ public class ZahlungDomainService {
 
         LOG.debug("Persisting {}", zahlung);
 
-        zahlungsRepository.create(zahlung);
+        zahlungRepository.create(zahlung);
     }
 }

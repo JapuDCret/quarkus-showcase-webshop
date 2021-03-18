@@ -1,6 +1,6 @@
 package de.openknowledge.projects.webshop.infrastructure.bestellung;
 
-import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import javax.enterprise.context.ApplicationScoped;

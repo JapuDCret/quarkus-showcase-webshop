@@ -1,4 +1,4 @@
-package de.openknowledge.projects.webshop.domain.bestellung;
+package de.openknowledge.projects.webshop.domain.bestellung.produkt;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

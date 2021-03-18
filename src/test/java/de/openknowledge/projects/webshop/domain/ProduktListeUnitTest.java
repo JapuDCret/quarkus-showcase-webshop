@@ -1,8 +1,8 @@
 package de.openknowledge.projects.webshop.domain;
 
-import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
-import de.openknowledge.projects.webshop.domain.bestellung.ProduktAuswahl;
-import de.openknowledge.projects.webshop.domain.bestellung.ProduktListe;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktAuswahl;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.ProduktListe;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 

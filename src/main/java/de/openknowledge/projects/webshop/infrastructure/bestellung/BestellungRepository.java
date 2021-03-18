@@ -1,6 +1,6 @@
 package de.openknowledge.projects.webshop.infrastructure.bestellung;
 
-import de.openknowledge.projects.webshop.domain.bestellung.BestellId;
+import de.openknowledge.projects.webshop.domain.bestellung.BestellungId;
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
 
 import javax.annotation.PostConstruct;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
-public class BestellRepository {
+public class BestellungRepository {
     private final Set<Bestellung> bestellungen = new HashSet<>();
 
     @PostConstruct
@@ -22,13 +22,13 @@ public class BestellRepository {
     }
 
     public Optional<Bestellung> findById(String bestellId) {
-        return this.findById(new BestellId(bestellId));
+        return this.findById(new BestellungId(bestellId));
     }
 
-    public Optional<Bestellung> findById(BestellId bestellId) {
+    public Optional<Bestellung> findById(BestellungId bestellungId) {
         return this.bestellungen
                 .stream()
-                .filter((bestellung) -> bestellung.getBestellId().equals(bestellId))
+                .filter((bestellung) -> bestellung.getBestellId().equals(bestellungId))
                 .findAny();
     }
 

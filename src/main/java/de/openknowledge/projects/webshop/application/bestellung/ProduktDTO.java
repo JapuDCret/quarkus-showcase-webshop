@@ -1,6 +1,6 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
-import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

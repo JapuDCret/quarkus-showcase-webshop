@@ -15,7 +15,7 @@ Feature: Bestellung
       | 5  | Bowl     |
       | 6  | Getränk  |
     When der Kunde bestellt die Produkte "<produkt_auswahl>"
-    Then erhält er eine Zahlungsaufforderung mit einem Betrag von <betrag>
+    Then erhält er eine BestellungInfo mit einem Betrag von <betrag>
 
     Examples:
       | vorname   | nachname | strasse          | plz   | ort        | produkt_auswahl | betrag |

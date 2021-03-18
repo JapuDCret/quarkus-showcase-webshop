@@ -135,7 +135,7 @@ public class BestellungCucumberSteps extends AbstractTestcontainersIT {
             .put("/bestellung");
   }
 
-  @Then("erhält er eine Zahlungsaufforderung mit einem Betrag von {float}")
+  @Then("erhält er eine BestellungInfo mit einem Betrag von {float}")
   public void then_the_betrag_is_equal_to(final float betrag) {
     this.response.then()
             .statusCode(Response.Status.CREATED.getStatusCode())

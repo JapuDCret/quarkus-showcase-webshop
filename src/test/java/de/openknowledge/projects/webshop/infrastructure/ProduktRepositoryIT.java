@@ -19,7 +19,7 @@ import com.github.database.rider.cdi.api.DBRider;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
 import de.openknowledge.projects.webshop.DatabaseTestResource;
-import de.openknowledge.projects.webshop.domain.bestellung.Produkt;
+import de.openknowledge.projects.webshop.domain.bestellung.produkt.Produkt;
 import de.openknowledge.projects.webshop.infrastructure.bestellung.ProduktRepository;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.common.QuarkusTestResource;

@@ -46,9 +46,9 @@ import java.util.Map;
 @TestHTTPEndpoint(ProduktResource.class)
 @DBRider
 @DataSet(value = "webshop.yml", strategy = SeedStrategy.CLEAN_INSERT, skipCleaningFor = "flyway_schema_history")
-class ProductResourceIT {
+class ProduktResourceIT {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ProductResourceIT.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ProduktResourceIT.class);
 
   @Test
   void getProductsShouldReturn200And6Produkte() {

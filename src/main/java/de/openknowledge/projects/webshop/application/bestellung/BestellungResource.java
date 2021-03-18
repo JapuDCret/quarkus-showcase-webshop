@@ -1,7 +1,7 @@
 package de.openknowledge.projects.webshop.application.bestellung;
 
 import de.openknowledge.projects.webshop.domain.bestellung.Bestellung;
-import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellRepository;
+import de.openknowledge.projects.webshop.infrastructure.bestellung.BestellungRepository;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -26,15 +26,15 @@ import java.util.Set;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-public class BestellResource {
+public class BestellungResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BestellResource.class);
-
-    @Inject
-    private BestellApplicationService service;
+    private static final Logger LOG = LoggerFactory.getLogger(BestellungResource.class);
 
     @Inject
-    private BestellRepository repository;
+    private BestellungApplicationService service;
+
+    @Inject
+    private BestellungRepository repository;
 
     // TODO: remove
     @GET

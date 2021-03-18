@@ -16,7 +16,7 @@
 package de.openknowledge.projects.webshop.application.zahlung;
 
 import de.openknowledge.projects.webshop.domain.zahlung.Zahlung;
-import de.openknowledge.projects.webshop.infrastructure.zahlungsart.ZahlungsRepository;
+import de.openknowledge.projects.webshop.infrastructure.zahlung.ZahlungRepository;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -38,66 +38,66 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-public class ZahlungsResource {
+public class ZahlungResource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ZahlungsResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ZahlungResource.class);
 
   @Inject
-  public ZahlungsRepository repository;
+  public ZahlungRepository repository;
 
   @Inject
   public ZahlungApplicationService service;
 
   // TODO: remove
   @GET
-  @APIResponse(responseCode = "200", description = "Zahlungsliste", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
+  @APIResponse(responseCode = "200", description = "Zahlungsliste", content = @Content(schema = @Schema(implementation = ZahlungInfoDTO.class)))
   public Response getZahlungen() {
     Set<Zahlung> zahlungen = repository.read();
 
-    Set<ZahlungsInfoDTO> zahlungsInfos = zahlungen.stream()
-            .map((zahlung) -> ZahlungsInfoDTO.of(zahlung))
+    Set<ZahlungInfoDTO> zahlungInfos = zahlungen.stream()
+            .map((zahlung) -> ZahlungInfoDTO.of(zahlung))
             .collect(Collectors.toSet());
 
-    LOG.info("zahlungsInfos = {}", zahlungsInfos);
+    LOG.info("zahlungInfos = {}", zahlungInfos);
 
     return Response.status(Response.Status.OK)
-            .entity(zahlungsInfos)
+            .entity(zahlungInfos)
             .build();
   }
 
   @GET
-  @Path("{bestellId}")
-  @APIResponse(responseCode = "200", description = "Info über die Zahlung", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
+  @Path("{bestellungId}")
+  @APIResponse(responseCode = "200", description = "Info über die Zahlung", content = @Content(schema = @Schema(implementation = ZahlungInfoDTO.class)))
   @APIResponse(responseCode = "404", description = "Zahlung nicht gefunden")
   public Response getZahlung(
-          @PathParam("bestellId") final String bestellId
+          @PathParam("bestellungId") final String bestellungId
   ) {
-    LOG.debug("Retrieving Zahlung for BestellId \"{}\"", bestellId);
+    LOG.debug("Retrieving Zahlung for BestellungId \"{}\"", bestellungId);
 
-    ZahlungsInfoDTO zahlungsInfo = service.getZahlungInfo(bestellId);
+    ZahlungInfoDTO zahlungInfo = service.getZahlungInfo(bestellungId);
 
-    LOG.debug("Returning {}", zahlungsInfo);
+    LOG.debug("Returning {}", zahlungInfo);
 
     return Response.status(Response.Status.OK)
-            .entity(zahlungsInfo)
+            .entity(zahlungInfo)
             .build();
   }
 
   @POST
-  @Path("{bestellId}/authorize")
-  @APIResponse(responseCode = "201", description = "Zahlung aktualisiert", content = @Content(schema = @Schema(implementation = ZahlungsInfoDTO.class)))
+  @Path("{bestellungId}/authorize")
+  @APIResponse(responseCode = "201", description = "Zahlung aktualisiert", content = @Content(schema = @Schema(implementation = ZahlungInfoDTO.class)))
   @APIResponse(responseCode = "404", description = "Zahlung nicht gefunden")
   public Response authorizeZahlung(
-          @PathParam("bestellId") final String bestellId
+          @PathParam("bestellungId") final String bestellungId
   ) {
-    LOG.debug("Authorizing Zahlung with BestellId \"{}\"", bestellId);
+    LOG.debug("Authorizing Zahlung with BestellungId \"{}\"", bestellungId);
 
-    ZahlungsInfoDTO zahlungsInfo = service.authorize(bestellId);
+    ZahlungInfoDTO zahlungInfo = service.authorize(bestellungId);
 
-    LOG.debug("Returning {}", zahlungsInfo);
+    LOG.debug("Returning {}", zahlungInfo);
 
     return Response.status(Response.Status.ACCEPTED)
-            .entity(zahlungsInfo)
+            .entity(zahlungInfo)
             .build();
   }
 }
